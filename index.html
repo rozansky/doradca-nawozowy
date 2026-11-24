@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Doradca Nawozowy</title>
+  <meta name="description" content="Wpisz nazwę rośliny i sprawdź, jak ją nawozić i chronić przed chorobami oraz szkodnikami.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="naglowek">
+    <a href="#" class="logo">🌿 Doradca Nawozowy</a>
+    <nav>
+      <a href="#naturalne" class="nav-link">♻️ Nawozy naturalne</a>
+      <a href="#kalkulator" class="nav-link">🧮 Kalkulator nawozów</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Czym nawozić i jak chronić swoją roślinę?</h1>
+      <p class="podtytul">Wpisz nazwę rośliny, a podpowiemy, jakie nawozy i środki ochrony wybrać.</p>
+
+      <div class="szukaj">
+        <input id="pole-szukaj" type="search" placeholder="np. pomidor, róża, borówka…" autocomplete="off" aria-label="Nazwa rośliny">
+        <ul id="podpowiedzi" class="podpowiedzi" role="listbox" hidden></ul>
+      </div>
+
+      <div class="kategorie" id="kategorie"></div>
+    </section>
+
+    <section id="wynik" class="wynik" hidden></section>
+
+    <section id="lista" class="lista"></section>
+  </main>
+
+  <footer class="stopka">
+    <p><strong>Uwaga:</strong> informacje mają charakter poglądowy. Środki ochrony roślin stosuj wyłącznie zgodnie z etykietą,
+      a ich aktualną rejestrację sprawdzaj w oficjalnej
+      <a href="https://www.gov.pl/web/rolnictwo/wyszukiwarka-srodkow-ochrony-roslin" target="_blank" rel="noopener">wyszukiwarce środków ochrony roślin Ministerstwa Rolnictwa</a>.</p>
+  </footer>
+
+  <script src="data/rosliny.js"></script>
+  <script src="data/nawozy.js"></script>
+  <script src="data/naturalne.js"></script>
+  <script src="kalkulator.js"></script>
+  <script src="strona-naturalne.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
