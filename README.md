@@ -1,5 +1,7 @@
 # 🌿 Doradca Nawozowy
 
+**👉 Strona: [rozansky.github.io/doradca-nawozowy](https://rozansky.github.io/doradca-nawozowy/)**
+
 Statyczna strona (HTML + CSS + JS, bez backendu): wpisz nazwę rośliny i sprawdź, jak ją nawozić i chronić przed chorobami oraz szkodnikami. Zawiera też przegląd nawozów naturalnych i kalkulator nawozów.
 
 ## Uruchomienie lokalne
