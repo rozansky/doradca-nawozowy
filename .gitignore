@@ -1,3 +1,14 @@
 .claude/
 Thumbs.db
 desktop.ini
+
+# Pliki robocze - nie są potrzebne na stronie
+projekty/
+narzedzia/
+serwer.py
+prompty-do-zdjec.md
+__pycache__/
+
+# Z folderu logo strona używa tylko logo.svg
+logo/*
+!logo/logo.svg
