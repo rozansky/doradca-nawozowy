@@ -17,7 +17,10 @@ function zakresDawki(min, max, jednostka) {
   return `${z(min, max)} ${ciekly ? "l" : "kg"}/m² · ${z(min * 100, max * 100)} ${ciekly ? "l" : "kg"}/ar · ${z(min * 10, max * 10)} ${ciekly ? "m³" : "t"}/ha`;
 }
 
-function rysujStroneNaturalnych() {
+// roslinaId – roślina, z której karty przyszedł użytkownik (przycisk powrotu wraca do niej).
+function rysujStroneNaturalnych(roslinaId) {
+  const wybrana = ROSLINY.find((r) => r.id === roslinaId);
+
   const karty = NAWOZY_NATURALNE.map((n) => `
     <article class="nat-karta">
       <header>
@@ -54,7 +57,6 @@ function rysujStroneNaturalnych() {
         <h2>Nawozy naturalne</h2>
         <span class="lac">Obornik, kompost, pomiot, gnojowica – czym się różnią, ile ich dać i kiedy.</span>
       </div>
-      <button class="wroc" id="wroc">← Wszystkie rośliny</button>
     </div>
 
     <p>Nawozy naturalne dostarczają azotu, fosforu, potasu i mikroelementów, ale przede wszystkim
@@ -89,7 +91,7 @@ function rysujStroneNaturalnych() {
       <li><strong>Najlepiej jesienią</strong>Rozrzucić i od razu przekopać lub przyorać (najpóźniej następnego dnia) – inaczej azot ulatnia się do powietrza.</li>
       <li><strong>Co 3–4 lata na ten sam zagon</strong>Klasyczny płodozmian: 1. rok – rośliny wymagające (kapustne, dyniowate, pomidor, ziemniak, kukurydza); 2. rok – średnio wymagające (cebula, por, burak, sałata); 3. rok – mało wymagające (marchew, pietruszka, groch, fasola).</li>
       <li><strong>Nie łącz z wapnem</strong>Wapno wapniowe lub tlenkowe razem z obornikiem powoduje duże straty azotu. Wapnuj osobno – z kilkutygodniowym odstępem lub w innym roku.</li>
-      <li><strong>Uwzględnij w nawożeniu mineralnym</strong>Składniki z obornika odejmij od dawki nawozów mineralnych – kalkulator na stronie robi to automatycznie.</li>
+      <li><strong>Uwzględnij w nawożeniu mineralnym</strong>Składniki z obornika odejmij od dawki nawozów mineralnych – kalkulator w karcie rośliny robi to automatycznie.</li>
     </ul>
 
     <div class="uwaga">
@@ -107,9 +109,8 @@ function rysujStroneNaturalnych() {
       </table>
     </div>
 
-    <p style="margin-top: 20px"><a href="#kalkulator" class="przycisk">🧮 Policz dawkę w kalkulatorze</a></p>
+    ${wybrana ? `<p style="margin-top: 20px"><a href="#${wybrana.id}" class="przycisk">🧮 Wróć i policz dawkę dla: ${wybrana.nazwa}</a></p>` : ""}
   `;
-  podepnijPrzyciskWroc();
 }
 
 // Krótka informacja o oborniku do karty rośliny.
@@ -121,6 +122,6 @@ function infoOObornikuHtml(roslinaId) {
   return `
     <div class="obornik-info">
       <span class="ocena ${ocena.klasa}">Obornik: ${ocena.tekst}</span>${dawka}
-      <p>${o.uwagi} <a href="#naturalne">Więcej o nawozach naturalnych →</a></p>
+      <p>${o.uwagi} <a href="#naturalne/${roslinaId}">Więcej o nawozach naturalnych →</a></p>
     </div>`;
 }

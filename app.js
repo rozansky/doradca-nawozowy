@@ -33,6 +33,11 @@ const kategorieEl = document.getElementById("kategorie");
 let aktywnaPodpowiedz = -1;
 let wybranaKategoria = "Wszystkie";
 
+// ===== Ilustracje roślin (img/ilustracje/<id>.svg, rysowane skryptem z narzedzia/ilustracje) =====
+function grafikaRosliny(r, klasa) {
+  return `<img class="${klasa}" src="img/ilustracje/${r.id}.svg" alt="${r.nazwa}">`;
+}
+
 // ===== Podpowiedzi w wyszukiwarce =====
 function pokazPodpowiedzi() {
   const trafienia = znajdzRosliny(pole.value);
@@ -47,7 +52,7 @@ function pokazPodpowiedzi() {
     podpowiedzi.innerHTML = `<li class="brak">Nie znamy jeszcze tej rośliny 🌱</li>`;
   } else {
     podpowiedzi.innerHTML = trafienia
-      .map((r) => `<li role="option" data-id="${r.id}"><span>${r.ikona}</span> ${r.nazwa} <span class="lac">${r.lacina}</span></li>`)
+      .map((r) => `<li role="option" data-id="${r.id}">${grafikaRosliny(r, "miniatura")} ${r.nazwa} <span class="lac">${r.lacina}</span></li>`)
       .join("");
   }
   podpowiedzi.hidden = false;
@@ -98,7 +103,11 @@ kategorieEl.addEventListener("click", (e) => {
 function rysujListe() {
   const widoczne = ROSLINY.filter((r) => wybranaKategoria === "Wszystkie" || r.kategoria === wybranaKategoria);
   lista.innerHTML = widoczne
-    .map((r) => `<a class="kafel" href="#${r.id}"><span class="ikona">${r.ikona}</span>${r.nazwa}<br><span class="kat">${r.kategoria}</span></a>`)
+    .map((r) => `
+      <a class="kafel" href="#${r.id}">
+        ${grafikaRosliny(r, "kafel-grafika")}
+        <span class="kafel-tekst">${r.nazwa}<span class="kat">${r.kategoria}</span></span>
+      </a>`)
     .join("");
 }
 
@@ -135,17 +144,17 @@ function rysujRosline(r) {
 
   wynik.innerHTML = `
     <div class="wynik-naglowek">
-      <span class="ikona">${r.ikona}</span>
+      <figure class="naglowek-grafika">${grafikaRosliny(r, "karta-grafika")}</figure>
       <div>
         <h2>${r.nazwa}</h2>
         <span class="lac">${r.lacina}</span>
       </div>
-      <button class="wroc" id="wroc">← Wszystkie rośliny</button>
     </div>
     <p>${r.opis}</p>
 
     <div class="info">
-      <div><span class="etykieta">Optymalne pH gleby</span>${r.gleba.ph}</div>
+      <div><span class="etykieta">Optymalne pH gleby</span>${r.gleba.ph}
+        <a class="maly-link" href="#ph/${r.id}">🧪 Jak zbadać pH u siebie i co, gdy jest złe? →</a></div>
       <div><span class="etykieta">Rodzaj gleby</span>${r.gleba.typ}</div>
       <div><span class="etykieta">Kategoria</span>${r.kategoria}</div>
     </div>
@@ -173,65 +182,74 @@ function rysujRosline(r) {
     </div>
   `;
 
-  rysujKalkulator(document.getElementById("kalk-karta"), r.id, false);
-  podepnijPrzyciskWroc();
+  rysujKalkulator(document.getElementById("kalk-karta"), r.id);
 }
 
-function podepnijPrzyciskWroc() {
-  document.getElementById("wroc").addEventListener("click", () => {
+// ===== Pasek powrotu (przyklejony u góry, widoczny w karcie rośliny i poradnikach) =====
+const pasekPowrotu = document.getElementById("pasek-powrotu");
+const hero = document.querySelector(".hero");
+
+// roslinaPowrot – gdy jesteśmy w poradniku, drugi przycisk wraca do karty tej rośliny.
+function pokazPasekPowrotu(roslinaPowrot) {
+  pasekPowrotu.innerHTML = `
+    <button type="button" class="powrot powrot-glowny" data-cel="">
+      <span class="strzalka" aria-hidden="true">←</span> Strona główna
+    </button>
+    ${roslinaPowrot ? `
+      <button type="button" class="powrot powrot-roslina" data-cel="${roslinaPowrot.id}">
+        <span class="strzalka" aria-hidden="true">←</span> ${roslinaPowrot.nazwa}
+      </button>` : ""}`;
+  pasekPowrotu.hidden = false;
+}
+
+pasekPowrotu.addEventListener("click", (e) => {
+  const przycisk = e.target.closest("[data-cel]");
+  if (!przycisk) return;
+  if (przycisk.dataset.cel) {
+    location.hash = przycisk.dataset.cel;
+  } else {
     history.pushState("", document.title, location.pathname);
     pokazWidok();
-  });
-}
-
-// Osobna strona kalkulatora (#kalkulator lub #kalkulator/pomidor)
-function rysujStroneKalkulatora(roslinaId) {
-  wynik.innerHTML = `
-    <div class="wynik-naglowek">
-      <span class="ikona">🧮</span>
-      <div>
-        <h2>Kalkulator dawki nawozu</h2>
-        <span class="lac">Wybierz roślinę, powierzchnię i nawozy – policzymy, ile ich potrzebujesz.</span>
-      </div>
-      <button class="wroc" id="wroc">← Wszystkie rośliny</button>
-    </div>
-    <div id="kalk-strona"></div>`;
-  rysujKalkulator(document.getElementById("kalk-strona"), roslinaId, true);
-  podepnijPrzyciskWroc();
-}
+  }
+});
 
 // ===== Przełączanie widoków (na podstawie adresu #id) =====
+function pokazSzczegoly() {
+  wynik.hidden = false;
+  hero.hidden = true;
+  lista.hidden = true;
+  podpowiedzi.hidden = true;
+  window.scrollTo({ top: 0 });
+}
+
 function pokazWidok() {
   const id = decodeURIComponent(location.hash.slice(1));
   const roslina = ROSLINY.find((r) => r.id === id);
 
   podpowiedzi.hidden = true;
 
-  if (id === "kalkulator" || id.startsWith("kalkulator/") || id === "naturalne") {
-    if (id === "naturalne") {
-      rysujStroneNaturalnych();
-      document.title = "Nawozy naturalne – Doradca Nawozowy";
+  // Poradniki otwierane z karty rośliny: #ph/pomidor, #naturalne/pomidor
+  const [strona, roslinaZPoradnika] = id.split("/");
+  if (strona === "ph" || strona === "naturalne") {
+    if (strona === "ph") {
+      rysujStronePh(roslinaZPoradnika);
+      document.title = "pH gleby – Doradca Nawozowy";
     } else {
-      rysujStroneKalkulatora(id.split("/")[1]);
-      document.title = "Kalkulator nawozów – Doradca Nawozowy";
+      rysujStroneNaturalnych(roslinaZPoradnika);
+      document.title = "Nawozy naturalne – Doradca Nawozowy";
     }
-    wynik.hidden = false;
-    lista.hidden = true;
-    kategorieEl.hidden = true;
-    pole.value = "";
-    wynik.scrollIntoView({ behavior: "smooth", block: "start" });
+    pokazPasekPowrotu(ROSLINY.find((r) => r.id === roslinaZPoradnika));
+    pokazSzczegoly();
   } else if (roslina) {
     rysujRosline(roslina);
-    wynik.hidden = false;
-    lista.hidden = true;
-    kategorieEl.hidden = true;
-    pole.value = roslina.nazwa;
     document.title = `${roslina.nazwa} – Doradca Nawozowy`;
-    wynik.scrollIntoView({ behavior: "smooth", block: "start" });
+    pokazPasekPowrotu(null);
+    pokazSzczegoly();
   } else {
     wynik.hidden = true;
+    pasekPowrotu.hidden = true;
+    hero.hidden = false;
     lista.hidden = false;
-    kategorieEl.hidden = false;
     pole.value = "";
     document.title = "Doradca Nawozowy";
   }

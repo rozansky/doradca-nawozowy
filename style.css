@@ -1,30 +1,64 @@
+/* ===== Motywy kolorów =====
+   Jasny „len i liść”: ciepłe, lniane tło zamiast czystej bieli.
+   Ciemny „las nocą”: głęboki mech i ziemia zamiast czystej czerni.
+   Domyślnie strona idzie za ustawieniem systemu; przycisk w nagłówku
+   ustawia <html data-motyw="jasny|ciemny"> i zapamiętuje wybór. */
 :root {
-  --tlo: #f6f8f3;
-  --karta: #ffffff;
+  color-scheme: light;
+  --tlo: #f2efe4;
+  --karta: #fbf9f2;
   --tekst: #1f2a1f;
-  --tekst-slaby: #5b6b5b;
+  --tekst-slaby: #5d6656;
   --akcent: #2f7d32;
-  --akcent-jasny: #e3f1e1;
-  --ramka: #dfe6da;
-  --ostrzezenie: #fff6e0;
-  --cien: 0 2px 10px rgba(0, 0, 0, 0.06);
+  --akcent-jasny: #e2eed9;
+  --na-akcencie: #ffffff;
+  --ramka: #e0dccb;
+  --ostrzezenie: #fbefd2;
+  --braz: #8a6440;
+  --cien: 0 2px 10px rgba(60, 50, 20, 0.08);
+  --ocena-tak-tlo: #dff3dc; --ocena-tak: #1f6b22;
+  --ocena-umiar-tlo: #fff1c9; --ocena-umiar: #7a5a00;
+  --ocena-nie-tlo: #fbdcdc; --ocena-nie: #9b2222;
   --N: #3b82c4;
   --P: #c4573b;
   --K: #8a5bc4;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --tlo: #121712;
-    --karta: #1b221b;
-    --tekst: #e6ede4;
-    --tekst-slaby: #9fb09c;
-    --akcent: #6cc070;
-    --akcent-jasny: #243624;
-    --ramka: #2e3a2e;
-    --ostrzezenie: #2d2818;
-    --cien: none;
+  :root:not([data-motyw="jasny"]) {
+    color-scheme: dark;
+    --tlo: #1a231d;
+    --karta: #233028;
+    --tekst: #e9ebe0;
+    --tekst-slaby: #a9b5a1;
+    --akcent: #7cc576;
+    --akcent-jasny: #2c3d30;
+    --na-akcencie: #13200f;
+    --ramka: #354639;
+    --ostrzezenie: #3a3222;
+    --braz: #d2b48c;
+    --cien: 0 2px 12px rgba(0, 0, 0, 0.25);
+    --ocena-tak-tlo: #1f3a20; --ocena-tak: #8fdc92;
+    --ocena-umiar-tlo: #3a3218; --ocena-umiar: #f0cf6c;
+    --ocena-nie-tlo: #3d1f1f; --ocena-nie: #f29b9b;
   }
+}
+:root[data-motyw="ciemny"] {
+  color-scheme: dark;
+  --tlo: #1a231d;
+  --karta: #233028;
+  --tekst: #e9ebe0;
+  --tekst-slaby: #a9b5a1;
+  --akcent: #7cc576;
+  --akcent-jasny: #2c3d30;
+  --na-akcencie: #13200f;
+  --ramka: #354639;
+  --ostrzezenie: #3a3222;
+  --braz: #d2b48c;
+  --cien: 0 2px 12px rgba(0, 0, 0, 0.25);
+  --ocena-tak-tlo: #1f3a20; --ocena-tak: #8fdc92;
+  --ocena-umiar-tlo: #3a3218; --ocena-umiar: #f0cf6c;
+  --ocena-nie-tlo: #3d1f1f; --ocena-nie: #f29b9b;
 }
 
 * { box-sizing: border-box; }
@@ -45,9 +79,30 @@ a { color: var(--akcent); }
   border-bottom: 1px solid var(--ramka);
   background: var(--karta);
 }
-.naglowek { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.nav-link { text-decoration: none; font-weight: 600; padding: 6px 12px; border-radius: 999px; }
-.nav-link:hover { background: var(--akcent-jasny); }
+
+/* --- Pasek powrotu (przyklejony u góry ekranu) --- */
+.pasek-powrotu {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  padding: 10px max(16px, calc((100% - 928px) / 2));
+  background: color-mix(in srgb, var(--tlo) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--ramka);
+}
+.powrot {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: inherit; font-size: 1.05rem; font-weight: 600;
+  padding: 10px 20px; min-height: 44px;
+  border-radius: 999px; cursor: pointer;
+  transition: transform .1s, background .15s;
+}
+.powrot .strzalka { font-size: 1.3rem; line-height: 1; }
+.powrot:active { transform: scale(0.97); }
+.powrot-glowny { background: var(--akcent); color: var(--na-akcencie); border: 2px solid var(--akcent); }
+.powrot-glowny:hover { filter: brightness(1.08); }
+.powrot-roslina { background: var(--karta); color: var(--tekst); border: 2px solid var(--ramka); }
+.powrot-roslina:hover { border-color: var(--akcent); }
+#wynik { margin-top: 20px; }
 
 /* --- Kalkulator --- */
 .kalk { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 20px; margin-top: 8px; }
@@ -101,19 +156,59 @@ a { color: var(--akcent); }
 .nat-sklad div { display: flex; align-items: center; gap: 6px; }
 .nat-dawka { background: var(--tlo); border-radius: 10px; padding: 8px 12px; }
 .ocena { display: inline-block; font-weight: 600; font-size: 0.85rem; padding: 2px 10px; border-radius: 999px; white-space: nowrap; }
-.ocena-tak { background: #dff3dc; color: #1f6b22; }
-.ocena-umiar { background: #fff1c9; color: #7a5a00; }
-.ocena-nie { background: #fbdcdc; color: #9b2222; }
-@media (prefers-color-scheme: dark) {
-  .ocena-tak { background: #1f3a20; color: #8fdc92; }
-  .ocena-umiar { background: #3a3218; color: #f0cf6c; }
-  .ocena-nie { background: #3d1f1f; color: #f29b9b; }
-}
+.ocena-tak { background: var(--ocena-tak-tlo); color: var(--ocena-tak); }
+.ocena-umiar { background: var(--ocena-umiar-tlo); color: var(--ocena-umiar); }
+.ocena-nie { background: var(--ocena-nie-tlo); color: var(--ocena-nie); }
 .obornik-info { margin-top: 12px; border: 1px solid var(--ramka); border-radius: 12px; padding: 10px 14px; }
 .obornik-info p { margin: 6px 0 0; }
 .tabela-przewijana { overflow-x: auto; }
-.przycisk { display: inline-block; background: var(--akcent); color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 999px; font-weight: 600; }
-@media (prefers-color-scheme: dark) { .przycisk { color: #102010; } }
+.przycisk { display: inline-block; background: var(--akcent); color: var(--na-akcencie); text-decoration: none; padding: 10px 18px; border-radius: 999px; font-weight: 600; }
+button.przycisk { border: none; cursor: pointer; font: inherit; font-weight: 600; }
+button.przycisk:disabled { opacity: 0.6; cursor: default; }
+.przycisk-jasny { background: var(--akcent-jasny); color: var(--tekst); }
+.kalk-prawa { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.akcje { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* --- Poradnik: pH --- */
+.maly-link { display: block; font-size: 0.82rem; margin-top: 6px; }
+.ph-skala { margin: 18px 0 8px; }
+.ph-klasy { position: relative; height: 34px; border-radius: 10px; overflow: hidden; }
+.ph-klasy div { position: absolute; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center; }
+.ph-klasy span { font-size: 0.75rem; font-weight: 600; color: #1b1b1b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; }
+.ph-podzialka, .ph-os { position: relative; height: 20px; display: block; }
+.ph-podzialka span, .ph-os span { position: absolute; transform: translateX(-50%); font-size: 0.8rem; color: var(--tekst-slaby); }
+.ph-sprawdz { background: var(--tlo); border-radius: 14px; padding: 14px 16px; margin: 16px 0; }
+.ph-sprawdz h4 { margin: 0 0 10px; }
+.ph-sprawdz p { margin: 10px 0 0; }
+.werdykt-ok { background: var(--akcent-jasny); padding: 8px 12px; border-radius: 10px; font-size: 0.9rem; }
+.dwa-tekst { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.dwa-tekst div { background: var(--tlo); border-radius: 12px; padding: 10px 14px; font-size: 0.92rem; }
+.ph-skutek ul { padding-left: 18px; margin: 8px 0 0; }
+.ph-skutek li { margin-bottom: 6px; }
+.ph-skutek.kwasna { border-top: 4px solid #e8913a; }
+.ph-skutek.zasadowa { border-top: 4px solid #4a8fd4; }
+.ph-wykres { display: grid; gap: 4px; }
+.ph-wiersz { display: grid; grid-template-columns: 170px 1fr 70px; gap: 10px; align-items: center; text-decoration: none; color: var(--tekst); padding: 4px 6px; border-radius: 8px; font-size: 0.9rem; }
+.ph-wiersz:not(.naglowek):hover { background: var(--tlo); }
+.ph-wiersz.wybrana { background: var(--akcent-jasny); font-weight: 600; }
+.ph-tor { position: relative; height: 12px; background: linear-gradient(90deg, #d9534f33, #e8913a33, #d6c13a33, #5cb85c33, #4a8fd433); border-radius: 999px; }
+.ph-pasek { position: absolute; top: 0; bottom: 0; background: var(--akcent); border-radius: 999px; }
+.ph-zakres { color: var(--tekst-slaby); font-size: 0.85rem; text-align: right; }
+.ph-wiersz.naglowek .ph-tor { background: none; }
+@media (max-width: 600px) {
+  .ph-wiersz { grid-template-columns: 110px 1fr 56px; font-size: 0.8rem; }
+  .dwa-tekst { grid-template-columns: 1fr; }
+  .ph-klasy span { font-size: 0.6rem; }
+}
+
+/* --- Wydruk notatki: drukujemy tylko #notatka-druk --- */
+#notatka-druk { display: none; }
+@media print {
+  body { background: #fff !important; }
+  body > *:not(#notatka-druk) { display: none !important; }
+  #notatka-druk { display: block; }
+  @page { size: A4; margin: 12mm 15mm; }
+}
 
 @media (max-width: 720px) {
   .trzy { grid-template-columns: 1fr 1fr 1fr; }
@@ -122,7 +217,47 @@ a { color: var(--akcent); }
   .skladnik .slaby { grid-column: 2 / -1; }
 }
 
-.logo { font-weight: 700; font-size: 1.15rem; text-decoration: none; color: var(--tekst); }
+.naglowek { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.logo { display: inline-flex; align-items: center; gap: 12px; font-family: "Fraunces", Georgia, "Times New Roman", serif; font-weight: 700; font-size: 1.75rem; line-height: 1.1; text-decoration: none; color: var(--akcent); }
+.logo img { width: 46px; height: 46px; flex-shrink: 0; }
+.logo .logo-n { color: var(--braz); }
+@media (max-width: 420px) { .logo { font-size: 1.3rem; } .logo img { width: 38px; height: 38px; } }
+
+/* --- Przełącznik motywu --- */
+/* Suwak: w trybie jasnym gałka-słońce stoi po lewej, w ciemnym gałka-księżyc przesuwa się w prawo. */
+.przelacz-motyw { flex: none; padding: 4px; margin: -4px; background: none; border: none; cursor: pointer; border-radius: 999px; }
+.przelacz-motyw:focus-visible { outline: 2px solid var(--akcent); outline-offset: 2px; }
+.przelacz-motyw .tor {
+  --szer: 68px; --gal: 28px;
+  position: relative; display: flex; align-items: center; justify-content: space-between;
+  width: var(--szer); height: 36px; padding: 0 9px; border-radius: 999px;
+  background: #dcebd2; border: 1px solid var(--ramka); color: #6d8a5e;
+  transition: background .3s, border-color .3s;
+}
+.przelacz-motyw:hover .tor { border-color: var(--akcent); }
+.przelacz-motyw .tor > svg { width: 15px; height: 15px; opacity: .7; }
+.przelacz-motyw .galka {
+  position: absolute; top: 3px; left: 3px; width: var(--gal); height: var(--gal); border-radius: 50%;
+  display: grid; place-items: center;
+  background: #f6c453; color: #7a5200; box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+  transition: transform .3s cubic-bezier(.4, .2, .2, 1.2), background .3s, color .3s;
+}
+.przelacz-motyw .galka svg { width: 17px; height: 17px; grid-area: 1 / 1; transition: opacity .2s; }
+.przelacz-motyw .galka .ikona-ksiezyc { opacity: 0; }
+.przelacz-motyw:active .galka { width: calc(var(--gal) + 4px); border-radius: 999px; }
+
+/* Wygląd suwaka w trybie ciemnym (ustawionym ręcznie albo przez system) */
+:root[data-motyw="ciemny"] .przelacz-motyw .tor { background: #12201a; border-color: #3d5244; color: #8aa392; }
+:root[data-motyw="ciemny"] .przelacz-motyw .galka { transform: translateX(calc(var(--szer) - var(--gal) - 8px)); background: #e4e8d6; color: #2a3a2e; }
+:root[data-motyw="ciemny"] .przelacz-motyw .galka .ikona-slonce { opacity: 0; }
+:root[data-motyw="ciemny"] .przelacz-motyw .galka .ikona-ksiezyc { opacity: 1; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-motyw="jasny"]) .przelacz-motyw .tor { background: #12201a; border-color: #3d5244; color: #8aa392; }
+  :root:not([data-motyw="jasny"]) .przelacz-motyw .galka { transform: translateX(calc(var(--szer) - var(--gal) - 8px)); background: #e4e8d6; color: #2a3a2e; }
+  :root:not([data-motyw="jasny"]) .przelacz-motyw .galka .ikona-slonce { opacity: 0; }
+  :root:not([data-motyw="jasny"]) .przelacz-motyw .galka .ikona-ksiezyc { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .przelacz-motyw .galka, .przelacz-motyw .tor { transition: none; } }
 
 main { max-width: 960px; margin: 0 auto; padding: 0 16px 40px; }
 
@@ -170,7 +305,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 40px; }
   cursor: pointer;
   font-size: 0.9rem;
 }
-.kategoria.wybrana { background: var(--akcent); color: #fff; border-color: var(--akcent); }
+.kategoria.wybrana { background: var(--akcent); color: var(--na-akcencie); border-color: var(--akcent); }
 
 .lista {
   display: grid;
@@ -182,16 +317,23 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 40px; }
   background: var(--karta);
   border: 1px solid var(--ramka);
   border-radius: 14px;
-  padding: 16px 12px;
+  padding: 16px 12px 14px;
   text-align: center;
   text-decoration: none;
   color: var(--tekst);
   box-shadow: var(--cien);
   transition: transform .15s;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  overflow: hidden;
 }
 .kafel:hover { transform: translateY(-2px); border-color: var(--akcent); }
-.kafel .ikona { font-size: 2rem; display: block; }
-.kafel .kat { font-size: 0.8rem; color: var(--tekst-slaby); }
+.kafel-grafika { width: 104px; height: 104px; display: block; }
+.kafel-tekst { display: flex; flex-direction: column; font-weight: 600; line-height: 1.3; }
+.kafel .kat { font-size: 0.8rem; color: var(--tekst-slaby); font-weight: 400; }
+.podpowiedzi .miniatura { width: 32px; height: 32px; flex: none; }
+
+.naglowek-grafika { margin: 0; flex: none; }
+.karta-grafika { width: 112px; height: 112px; display: block; }
 
 /* --- Karta wyniku --- */
 .wynik {

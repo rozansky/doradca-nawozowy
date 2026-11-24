@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propozycje czcionek</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@700;800&family=Baloo+2:wght@600;700&family=Lora:wght@600;700&family=Bitter:wght@600;700&family=Comfortaa:wght@700&family=Outfit:wght@600;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root { --tlo:#f2efe4; --karta:#fbf9f2; --tekst:#1f2a1f; --slaby:#5d6656; --akcent:#2f7d32; --ramka:#e0dccb; --braz:#8a6440; }
+  body { margin:0; padding:24px 16px 40px; background:var(--tlo); color:var(--tekst); font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  h1 { font-size:1.4rem; margin:0 0 4px; } .opis { color:var(--slaby); margin:0 0 20px; max-width:760px; }
+  .lista { display:grid; gap:14px; max-width:900px; }
+  .karta { background:var(--karta); border:1px solid var(--ramka); border-radius:14px; overflow:hidden; }
+  .meta { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:10px 16px 0; font-size:.85rem; color:var(--slaby); }
+  .meta b { color:var(--tekst); font-size:.95rem; }
+  .wiersze { display:grid; grid-template-columns:1fr 1fr; }
+  .naglowek { display:flex; align-items:center; gap:12px; padding:16px; }
+  .naglowek img { width:46px; height:46px; flex:none; }
+  .napis { font-size:1.75rem; line-height:1.1; white-space:nowrap; }
+  .napis .d { color:var(--akcent); } .napis .n { color:var(--braz); }
+  .ciemny { background:#1f2a22; } .ciemny .napis { color:#e9ebe0; } .ciemny .napis .d { color:#8fd18a; } .ciemny .napis .n { color:#d2b48c; }
+  .jednolity .napis span { color:inherit !important; }
+  .przelacz { margin:0 0 16px; display:flex; gap:8px; align-items:center; font-size:.9rem; }
+  @media (max-width:640px) { .wiersze { grid-template-columns:1fr; } .napis { font-size:1.45rem; } }
+</style>
+</head>
+<body>
+<h1>Napis „Doradca Nawozowy” — propozycje czcionek</h1>
+<p class="opis">Każda czcionka obsługuje polskie znaki. Napis jest powiększony względem obecnego (ok. 1,75 rem zamiast 1,15 rem), z logo 46 px. Po lewej tryb jasny, po prawej ciemny — w nowych, „ogrodowych” kolorach.</p>
+<label class="przelacz"><input type="checkbox" id="dwukolor" checked> Dwa kolory (zielone „Doradca”, brązowe „Nawozowy”)</label>
+<div class="lista" id="lista"></div>
+<script>
+const czcionki = [
+  ['A', 'Fraunces', "'Fraunces', serif", 700, 'Szeryfowa o miękkich, „organicznych” kształtach — elegancko, trochę jak etykieta z ogrodnictwa.'],
+  ['B', 'Nunito', "'Nunito', sans-serif", 800, 'Zaokrąglona, przyjazna i bardzo czytelna — bezpieczny wybór.'],
+  ['C', 'Baloo 2', "'Baloo 2', sans-serif", 700, 'Pękata i wesoła — luźny, domowo-ogródkowy klimat.'],
+  ['D', 'Lora', "'Lora', serif", 700, 'Klasyczna szeryfowa, książkowa — poważny „poradnik”.'],
+  ['E', 'Bitter', "'Bitter', serif", 700, 'Szeryfy blokowe — solidnie, rolniczo, jak napis na worku nawozu.'],
+  ['F', 'Comfortaa', "'Comfortaa', sans-serif", 700, 'Geometryczna, okrągła — lekko i nowocześnie.'],
+  ['G', 'Outfit', "'Outfit', sans-serif", 700, 'Nowoczesna, prosta — „aplikacja”, a nie broszura.'],
+  ['H', 'Caveat', "'Caveat', cursive", 700, 'Odręczna — jak notatka ogrodnika; najlepiej z większym rozmiarem.'],
+];
+const naglowek = (rodzina, waga, ciemny) => `
+  <div class="naglowek ${ciemny ? 'ciemny' : ''}">
+    <img src="logo.svg" alt="">
+    <span class="napis" style="font-family:${rodzina};font-weight:${waga}${rodzina.includes('Caveat') ? ';font-size:2.3rem' : ''}"><span class="d">Doradca</span> <span class="n">Nawozowy</span></span>
+  </div>`;
+document.getElementById('lista').innerHTML = czcionki.map(([lit, nazwa, rodzina, waga, opis]) => `
+  <div class="karta">
+    <div class="meta"><b>${lit}. ${nazwa}</b><span>${opis}</span></div>
+    <div class="wiersze">${naglowek(rodzina, waga, false)}${naglowek(rodzina, waga, true)}</div>
+  </div>`).join('');
+document.getElementById('dwukolor').addEventListener('change', (e) => document.body.classList.toggle('jednolity', !e.target.checked));
+</script>
+</body>
+</html>

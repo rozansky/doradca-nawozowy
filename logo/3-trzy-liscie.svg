@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs><path id="l" d="M0 0 C-9 -11 -9 -28 0 -40 C9 -28 9 -11 0 0 Z"/></defs>
+  <use href="#l" transform="translate(32 58) rotate(-38) scale(0.85)" fill="#66bb6a"/>
+  <use href="#l" transform="translate(32 58) rotate(38) scale(0.85)" fill="#1f6b22"/>
+  <use href="#l" transform="translate(32 58)" fill="#2f7d32"/>
+  <path d="M32 56 L32 26" stroke="#e3f1e1" stroke-width="2" stroke-linecap="round"/>
+</svg>

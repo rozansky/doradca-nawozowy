@@ -5,16 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Doradca Nawozowy</title>
   <meta name="description" content="Wpisz nazwę rośliny i sprawdź, jak ją nawozić i chronić przed chorobami oraz szkodnikami.">
+  <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&display=swap">
   <link rel="stylesheet" href="style.css">
+  <script>
+    // Zapamiętany motyw ustawiamy przed narysowaniem strony, żeby nie mignęła w złych kolorach.
+    try { const m = localStorage.getItem("motyw"); if (m === "jasny" || m === "ciemny") document.documentElement.dataset.motyw = m; } catch (e) {}
+  </script>
 </head>
 <body>
   <header class="naglowek">
-    <a href="#" class="logo">🌿 Doradca Nawozowy</a>
-    <nav>
-      <a href="#naturalne" class="nav-link">♻️ Nawozy naturalne</a>
-      <a href="#kalkulator" class="nav-link">🧮 Kalkulator nawozów</a>
-    </nav>
+    <a href="#" class="logo"><img src="logo/logo.svg" alt="" width="46" height="46"><span>Doradca <span class="logo-n">Nawozowy</span></span></a>
+    <button type="button" id="przelacz-motyw" class="przelacz-motyw" role="switch" aria-checked="false" aria-label="Tryb ciemny">
+      <span class="tor" aria-hidden="true">
+        <svg class="tlo-slonce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+        <svg class="tlo-ksiezyc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <span class="galka">
+          <svg class="ikona-slonce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+          <svg class="ikona-ksiezyc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </span>
+      </span>
+    </button>
   </header>
+
+  <nav id="pasek-powrotu" class="pasek-powrotu" aria-label="Nawigacja" hidden></nav>
 
   <main>
     <section class="hero">
@@ -45,6 +61,9 @@
   <script src="data/naturalne.js"></script>
   <script src="kalkulator.js"></script>
   <script src="strona-naturalne.js"></script>
+  <script src="notatka.js"></script>
+  <script src="strona-ph.js"></script>
   <script src="app.js"></script>
+  <script src="motyw.js"></script>
 </body>
 </html>

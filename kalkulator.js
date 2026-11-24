@@ -130,24 +130,20 @@ function obliczDawki(r, opcje) {
 }
 
 // ----- Interfejs -----
-// Jeśli wyborRosliny = true, pokazuje listę wyboru rośliny (osobna strona kalkulatora).
-function rysujKalkulator(kontener, roslinaId, wyborRosliny) {
-  const r = ROSLINY.find((x) => x.id === roslinaId) || ROSLINY[0];
+// Kalkulator jest częścią karty rośliny.
+function rysujKalkulator(kontener, roslinaId) {
+  const r = ROSLINY.find((x) => x.id === roslinaId);
   const dom = domyslneNawozy(r);
   const rolnicza = r.kategoria === "Rolnicze"; // pola liczymy w hektarach, ogródki w m²
   const badanie = wczytajBadanie();
   const maBadanie = badanie.p || badanie.k || badanie.ph;
 
-  const wyborHtml = wyborRosliny
-    ? `<label class="pole">Roślina
-        <select data-k="roslina">${ROSLINY.map((x) => `<option value="${x.id}" ${x.id === r.id ? "selected" : ""}>${x.ikona} ${x.nazwa}</option>`).join("")}</select>
-      </label>`
-    : "";
-
   kontener.innerHTML = `
     <div class="kalk">
       <div class="kalk-pola">
-        ${wyborHtml}
+        <label class="pole">Miejsce <span class="jedn">(opcjonalnie – pojawi się w notatce)</span>
+          <input type="text" data-k="miejsce" maxlength="60" placeholder="np. Zagon przy szklarni, Działka nr 12">
+        </label>
         <label class="pole">Powierzchnia
           <span class="razem">
             <input type="number" data-k="pow" value="${rolnicza ? 1 : 10}" min="0" step="any" inputmode="decimal">
@@ -223,11 +219,19 @@ function rysujKalkulator(kontener, roslinaId, wyborRosliny) {
           </label>
         </fieldset>
       </div>
-      <div class="kalk-wynik" data-k="wynik"></div>
+      <div class="kalk-prawa">
+        <div class="kalk-wynik" data-k="wynik"></div>
+        <div class="akcje">
+          <button type="button" class="przycisk" data-k="pdf">📄 Pobierz notatkę PDF</button>
+          <button type="button" class="przycisk przycisk-jasny" data-k="druk">🖨️ Drukuj</button>
+        </div>
+        <p class="slaby maly" data-k="komunikat"></p>
+      </div>
     </div>`;
 
   const kalk = kontener.querySelector(".kalk");
   const pole = (k) => kalk.querySelector(`[data-k="${k}"]`);
+  let stan = null; // ostatni wynik – z niego powstaje notatka PDF
   const liczbaZPola = (k) => {
     const v = parseFloat(String(pole(k).value).replace(",", "."));
     return Number.isFinite(v) ? v : null;
@@ -332,6 +336,16 @@ function rysujKalkulator(kontener, roslinaId, wyborRosliny) {
       else if (lab.ph > max) ostrzezenia.push(`pH gleby ${lab.ph.toLocaleString("pl-PL")} jest wyższe niż optymalne (${r.gleba.ph})${r.kwasolubna ? " – zakwaszaj glebę (siarka, kwaśny torf, kora sosnowa)" : " – nie wapnuj, stosuj nawozy zakwaszające (np. siarczan amonu)"}.`);
       else ostrzezenia.push(`✅ pH gleby ${lab.ph.toLocaleString("pl-PL")} mieści się w zakresie optymalnym dla tej rośliny.`);
     }
+    // Link do poradnika tylko na stronie (nie trafia do notatki PDF).
+    const linkPh = lab.ph !== null && !ostrzezenia[ostrzezenia.length - 1].startsWith("✅")
+      ? `<p class="maly"><a href="#ph/${r.id}">🧪 Skutki złego pH i jak je poprawić →</a></p>` : "";
+
+    stan = {
+      r, m2, powierzchnia, jednostka: pole("jedn").value, miejsce: pole("miejsce").value.trim(),
+      kat: pole("kat").value, lab, klasaP: opcje.klasaP, klasaK: opcje.klasaK,
+      potrzeba, nat, pozycje, ostrzezenia
+    };
+    pole("pdf").disabled = pole("druk").disabled = !m2;
 
     pole("wynik").innerHTML = `
       <h4>Zapotrzebowanie na sezon ${m2 ? `(${m2.toLocaleString("pl-PL")} m²)` : ""}</h4>
@@ -340,6 +354,7 @@ function rysujKalkulator(kontener, roslinaId, wyborRosliny) {
       <h4>${nat ? "Uzupełnienie nawozami mineralnymi" : "Ile nawozu kupić i wysiać"}</h4>
       ${mineralneHtml}
       ${ostrzezenia.map((o) => `<p class="ostrz">${o.startsWith("✅") ? "" : "⚠️ "}${o}</p>`).join("")}
+      ${linkPh}
       <p class="slaby maly">Dawki są orientacyjne. Azot najlepiej podzielić na 2–3 dawki (patrz harmonogram nawożenia).
         ${lab.p === null && lab.k === null ? "Dokładniej policzymy po wpisaniu wyników badania gleby." : ""}</p>`;
   }
@@ -347,10 +362,6 @@ function rysujKalkulator(kontener, roslinaId, wyborRosliny) {
   kalk.addEventListener("input", przelicz);
   kalk.addEventListener("change", (e) => {
     const k = e.target.dataset.k;
-    if (k === "roslina") {
-      location.hash = `kalkulator/${e.target.value}`;
-      return;
-    }
     if (k === "nat") {
       const n = NAWOZY_NATURALNE.find((x) => x.id === e.target.value);
       let dawka = n ? zalecanaDawkaNaturalnego(r.id, n) : "";
@@ -364,6 +375,21 @@ function rysujKalkulator(kontener, roslinaId, wyborRosliny) {
     ["labP", "labK", "labPh"].forEach((k) => (pole(k).value = ""));
     przelicz();
   });
+
+  pole("pdf").addEventListener("click", async () => {
+    const przycisk = pole("pdf");
+    przycisk.disabled = true;
+    przycisk.textContent = "⏳ Tworzę PDF…";
+    pole("komunikat").textContent = "";
+    try {
+      await pobierzPdf(stan);
+    } catch (e) {
+      pole("komunikat").textContent = "Nie udało się utworzyć PDF (brak internetu?). Użyj „Drukuj” i wybierz drukarkę „Zapisz jako PDF”.";
+    }
+    przycisk.disabled = false;
+    przycisk.textContent = "📄 Pobierz notatkę PDF";
+  });
+  pole("druk").addEventListener("click", () => drukujNotatke(stan));
 
   przelicz();
 }
