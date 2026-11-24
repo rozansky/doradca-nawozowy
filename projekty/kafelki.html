@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propozycje kafelków</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+<link rel="stylesheet" href="../style.css?v=2026-11-24b">
+<style>
+  body { padding-bottom: 60px; }
+  .gora-projektu { max-width: 1000px; margin: 0 auto; padding: 24px 16px 8px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .gora-projektu h1 { font-family: "Fraunces", Georgia, serif; margin: 0; font-size: 1.6rem; }
+  .gora-projektu p { margin: 4px 0 0; color: var(--tekst-slaby); }
+  .zakladki { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--tlo) 90%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--ramka); }
+  .zakladki div { max-width: 1000px; margin: 0 auto; padding: 10px 16px; display: flex; gap: 8px; overflow-x: auto; }
+  .zakladki a { white-space: nowrap; text-decoration: none; color: var(--tekst); background: var(--karta); border: 1px solid var(--ramka); padding: 6px 14px; border-radius: 999px; font-size: .9rem; font-weight: 600; }
+  .zakladki a:hover { border-color: var(--akcent); }
+  .wariant { max-width: 1000px; margin: 0 auto; padding: 32px 16px 8px; scroll-margin-top: 60px; }
+  .wariant > h2 { font-family: "Fraunces", Georgia, serif; margin: 0; font-size: 1.4rem; }
+  .wariant > .opis-w { margin: 4px 0 18px; color: var(--tekst-slaby); max-width: 720px; }
+  .wariant + .wariant { border-top: 1px dashed var(--ramka); }
+
+  /* kolory kategorii (mieszane z tłem karty, więc działają w obu trybach) */
+  [data-kat="Warzywa"] { --kat: #6aa84f; } [data-kat="Owoce"] { --kat: #d9534f; } [data-kat="Drzewa owocowe"] { --kat: #e08a3c; }
+  [data-kat="Kwiaty"] { --kat: #c25b9b; } [data-kat="Trawniki"] { --kat: #4caf50; } [data-kat="Iglaki"] { --kat: #2e7d5b; } [data-kat="Rolnicze"] { --kat: #c9a227; }
+  .znaczek { display: inline-block; font-size: .72rem; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: color-mix(in srgb, var(--kat) 20%, var(--karta)); color: color-mix(in srgb, var(--kat) 70%, var(--tekst)); }
+  .kropki { display: inline-flex; gap: 3px; vertical-align: middle; } .kropki i { width: 7px; height: 7px; border-radius: 50%; background: var(--ramka); } .kropki i.p { background: var(--N); }
+  .trud-1, .wD .cechy strong.trud-1 { color: var(--akcent); } .trud-2, .wD .cechy strong.trud-2 { color: #c98a22; } .trud-3, .wD .cechy strong.trud-3 { color: var(--P); }
+  a.k { text-decoration: none; color: var(--tekst); }
+
+  /* A. Pocztówka */
+  .wA { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+  .wA .k { position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 4 / 5; box-shadow: var(--cien); background: #eee; }
+  .wA img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+  .wA .k:hover img { transform: scale(1.06); }
+  .wA .podpis { position: absolute; inset: auto 0 0 0; padding: 40px 14px 14px; background: linear-gradient(transparent, rgba(15, 25, 15, .78)); color: #fff; }
+  .wA .podpis b { display: block; font-family: "Fraunces", Georgia, serif; font-size: 1.25rem; line-height: 1.15; }
+  .wA .podpis span { font-size: .8rem; opacity: .85; font-style: italic; }
+  .wA .znaczek { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,.9); color: #1f2a1f; }
+
+  /* B. Lista pozioma */
+  .wB { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+  .wB .k { display: grid; grid-template-columns: 84px 1fr auto; gap: 14px; align-items: center; background: var(--karta); border: 1px solid var(--ramka); border-radius: 14px; padding: 8px 14px 8px 8px; transition: border-color .15s, transform .15s; }
+  .wB .k:hover { border-color: var(--akcent); transform: translateX(3px); }
+  .wB img { width: 84px; height: 84px; object-fit: cover; border-radius: 10px; }
+  .wB b { display: block; font-size: 1.05rem; } .wB .lac { display: block; font-size: .8rem; color: var(--tekst-slaby); font-style: italic; margin-bottom: 4px; }
+  .wB .strz { color: var(--akcent); font-size: 1.3rem; }
+
+  /* C. Okrągłe */
+  .wC { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 22px 12px; }
+  .wC .k { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; font-weight: 600; }
+  .wC .ramka-k { width: 116px; height: 116px; border-radius: 50%; padding: 5px; background: conic-gradient(from 200deg, var(--kat), color-mix(in srgb, var(--kat) 30%, var(--karta)), var(--kat)); transition: transform .2s; }
+  .wC .k:hover .ramka-k { transform: translateY(-4px) rotate(-3deg); }
+  .wC img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--tlo); }
+  .wC small { display: block; font-weight: 400; color: var(--tekst-slaby); font-size: .78rem; }
+
+  /* D. Karta z informacjami */
+  .wD { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .wD .k { background: var(--karta); border: 1px solid var(--ramka); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: transform .15s, box-shadow .15s; }
+  .wD .k:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.12); border-color: var(--akcent); }
+  .wD .zdj { position: relative; } .wD img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+  .wD .zdj .znaczek { position: absolute; top: 10px; left: 10px; background: var(--karta); }
+  .wD .tresc { padding: 12px 14px 14px; display: grid; gap: 2px; }
+  .wD b { font-family: "Fraunces", Georgia, serif; font-size: 1.2rem; } .wD .lac { font-size: .8rem; color: var(--tekst-slaby); font-style: italic; }
+  .wD .cechy { display: flex; justify-content: space-between; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--ramka); font-size: .78rem; color: var(--tekst-slaby); }
+  .wD .cechy > span { display: grid; gap: 2px; } .wD .cechy strong { color: var(--tekst); font-size: .85rem; }
+
+  /* E. Półki wg kategorii */
+  .wE { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .polka { min-width: 0; }
+  .polka h3 { margin: 0 0 10px; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
+  .polka h3 .licz { font-size: .8rem; font-weight: 600; color: var(--tekst-slaby); }
+  .polka h3::before { content: ""; width: 6px; height: 22px; border-radius: 3px; background: var(--kat); }
+  .tor-p { display: grid; grid-auto-flow: column; grid-auto-columns: 170px; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
+  .tor-p .k { scroll-snap-align: start; background: var(--karta); border: 1px solid var(--ramka); border-radius: 14px; overflow: hidden; }
+  .tor-p .k:hover { border-color: var(--kat); }
+  .tor-p img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+  .tor-p .k div { padding: 8px 12px 10px; font-weight: 600; } .tor-p small { display: block; font-weight: 400; color: var(--tekst-slaby); font-size: .78rem; }
+
+  @media (max-width: 520px) {
+    .wA { grid-template-columns: 1fr 1fr; gap: 10px; } .wA .podpis b { font-size: 1.05rem; }
+    .wB { grid-template-columns: 1fr; }
+    .wC { grid-template-columns: repeat(3, 1fr); } .wC .ramka-k { width: 92px; height: 92px; }
+    .wD { grid-template-columns: 1fr 1fr; gap: 10px; } .wD .cechy { flex-direction: column; }
+  }
+</style>
+<script>try { const m = localStorage.getItem("motyw"); if (m) document.documentElement.dataset.motyw = m; } catch (e) {}</script>
+</head>
+<body>
+<div class="gora-projektu">
+  <div>
+    <h1>Kafelki roślin — propozycje</h1>
+    <p>Pięć wyglądów listy roślin na stronie głównej, na prawdziwych danych i zdjęciach.</p>
+  </div>
+  <button class="przycisk" id="motyw">🌗 Zmień tryb</button>
+</div>
+<nav class="zakladki"><div>
+  <a href="#A">A. Pocztówka</a><a href="#B">B. Lista</a><a href="#C">C. Okrągłe</a><a href="#D">D. Karta z info</a><a href="#E">E. Półki</a>
+</div></nav>
+
+<section class="wariant" id="A"><h2>A. Pocztówka</h2><p class="opis-w">Duże zdjęcie na całą kartę, nazwa na ciemnym przejściu u dołu. Najbardziej „katalogowo” i efektownie.</p><div class="wA"></div></section>
+<section class="wariant" id="B"><h2>B. Lista pozioma</h2><p class="opis-w">Małe zdjęcie z lewej, obok nazwa, łacina, kategoria i trudność. Najszybciej się przegląda, zwłaszcza na telefonie.</p><div class="wB"></div></section>
+<section class="wariant" id="C"><h2>C. Okrągłe</h2><p class="opis-w">Zdjęcia w kółkach z obwódką w kolorze kategorii. Lekko i minimalistycznie, jak „relacje” w aplikacjach.</p><div class="wC"></div></section>
+<section class="wariant" id="D"><h2>D. Karta z informacjami</h2><p class="opis-w">Zdjęcie, nazwa i od razu najważniejsze cechy: pH, podlewanie, trudność. Najwięcej treści przed kliknięciem.</p><div class="wD"></div></section>
+<section class="wariant" id="E"><h2>E. Półki według kategorii</h2><p class="opis-w">Rośliny pogrupowane na „półki” (Warzywa, Owoce…), każda przewijana w bok. Zastępuje przyciski filtrów.</p><div class="wE"></div></section>
+
+<script src="../data/rosliny.js?v=2026-11-24b"></script>
+<script>
+const zdj = (r) => `../img/zdjecia/${r.id}.jpg`;
+const TRUD = ["", "łatwa", "średnia", "trudna"];
+const PODL = ["", "mało", "umiarkowanie", "dużo"];
+const kropki = (n) => `<span class="kropki">${[1, 2, 3].map((i) => `<i class="${i <= n ? "p" : ""}"></i>`).join("")}</span>`;
+const link = (r, wnetrze, klasa = "k") => `<a class="${klasa}" href="../#${r.id}" data-kat="${r.kategoria}">${wnetrze}</a>`;
+const u = (r) => r.uprawa || {};
+
+document.querySelector(".wA").innerHTML = ROSLINY.map((r) => link(r, `
+  <img src="${zdj(r)}" alt="" loading="lazy"><span class="znaczek">${r.kategoria}</span>
+  <div class="podpis"><b>${r.nazwa}</b><span>${r.lacina}</span></div>`)).join("");
+
+document.querySelector(".wB").innerHTML = ROSLINY.map((r) => link(r, `
+  <img src="${zdj(r)}" alt="" loading="lazy">
+  <div><b>${r.nazwa}</b><span class="lac">${r.lacina}</span><span class="znaczek">${r.kategoria}</span>
+    <small class="trud-${u(r).trudnosc}" style="margin-left:6px;font-weight:600">● ${TRUD[u(r).trudnosc] || ""}</small></div>
+  <span class="strz">›</span>`)).join("");
+
+document.querySelector(".wC").innerHTML = ROSLINY.map((r) => link(r, `
+  <span class="ramka-k"><img src="${zdj(r)}" alt="" loading="lazy"></span>
+  <span>${r.nazwa}<small>${r.kategoria}</small></span>`)).join("");
+
+document.querySelector(".wD").innerHTML = ROSLINY.map((r) => link(r, `
+  <div class="zdj"><img src="${zdj(r)}" alt="" loading="lazy"><span class="znaczek">${r.kategoria}</span></div>
+  <div class="tresc"><b>${r.nazwa}</b><span class="lac">${r.lacina}</span>
+    <div class="cechy">
+      <span>pH<strong>${r.gleba.ph}</strong></span>
+      <span>Woda<strong>${kropki(u(r).podlewanie)}</strong></span>
+      <span>Trudność<strong class="trud-${u(r).trudnosc}">${TRUD[u(r).trudnosc] || ""}</strong></span>
+    </div></div>`)).join("");
+
+const kategorie = [...new Set(ROSLINY.map((r) => r.kategoria))];
+document.querySelector(".wE").innerHTML = kategorie.map((k) => {
+  const w = ROSLINY.filter((r) => r.kategoria === k);
+  return `<div class="polka" data-kat="${k}"><h3>${k} <span class="licz">${w.length}</span></h3>
+    <div class="tor-p">${w.map((r) => link(r, `<img src="${zdj(r)}" alt="" loading="lazy"><div>${r.nazwa}<small>${PODL[u(r).podlewanie] ? "woda: " + PODL[u(r).podlewanie] : ""}</small></div>`)).join("")}</div></div>`;
+}).join("");
+
+document.getElementById("motyw").onclick = () => {
+  const html = document.documentElement;
+  const ciemny = (html.dataset.motyw || (matchMedia("(prefers-color-scheme: dark)").matches ? "ciemny" : "jasny")) === "ciemny";
+  html.dataset.motyw = ciemny ? "jasny" : "ciemny";
+};
+</script>
+</body>
+</html>

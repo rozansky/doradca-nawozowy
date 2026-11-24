@@ -5,6 +5,8 @@
 //        (N = azot, P = fosfor jako P2O5, K = potas jako K2O). 10 g/m² = 100 kg/ha.
 // bezChloru: true  -> roślina wrażliwa na chlor (kalkulator domyślnie wybierze siarczan potasu)
 // kwasolubna: true -> kalkulator domyślnie wybierze nawozy zakwaszające
+// uprawa: podlewanie 1–3 (mało/umiarkowanie/dużo), odpornosc 1–3 na choroby (niska/średnia/wysoka),
+//         mroz – tekst o odporności na mróz, trudnosc 1–3 (łatwa/średnia/trudna) + krótkie opisy.
 
 const ROSLINY = [
   {
@@ -18,6 +20,11 @@ const ROSLINY = [
     bezChloru: true,
     opis: "Warzywo o dużych wymaganiach pokarmowych, szczególnie wobec potasu i wapnia w okresie owocowania.",
     gleba: { ph: "6,0–7,0", typ: "Żyzna, próchniczna, przepuszczalna" },
+    uprawa: {
+      podlewanie: 3, podlewanieOpis: "Dużo i regularnie: 10–15 l/m² 2–3 razy w tygodniu, pod korzeń, najlepiej rano. Nierówne podlewanie powoduje pękanie owoców i suchą zgniliznę.",
+      mroz: "Nie znosi przymrozków – sadź rozsadę po 15 maja.", odpornosc: 1, odpornoscOpis: "Podatny na zarazę ziemniaka, zwłaszcza w deszczowe lata.",
+      trudnosc: 2, trudnoscOpis: "Wymaga palikowania, usuwania pędów bocznych i ochrony przed zarazą."
+    },
     potrzeby: { N: 2, P: 2, K: 3 },
     nawozenie: [
       { termin: "Przed sadzeniem", zalecenie: "Kompost lub obornik (ok. 3–5 kg/m²) oraz wieloskładnikowy nawóz NPK." },
@@ -42,6 +49,11 @@ const ROSLINY = [
     bezChloru: true,
     opis: "Szybko rosnące warzywo o płytkim systemie korzeniowym, wrażliwe na zasolenie podłoża.",
     gleba: { ph: "6,0–7,0", typ: "Ciepła, próchniczna, wilgotna" },
+    uprawa: {
+      podlewanie: 3, podlewanieOpis: "Bardzo dużo: ok. 10 l/m² co 2–3 dni w upały, ciepłą wodą, pod korzeń.",
+      mroz: "Bardzo wrażliwy na chłód – siej po 15 maja, gdy gleba ma ponad 15°C.", odpornosc: 1, odpornoscOpis: "Podatny na mączniaka rzekomego – wybieraj odmiany odporne.",
+      trudnosc: 2, trudnoscOpis: "Łatwy w siewie, ale potrzebuje stałej wilgoci i ciepła."
+    },
     potrzeby: { N: 3, P: 2, K: 3 },
     nawozenie: [
       { termin: "Przed siewem", zalecenie: "Obornik lub kompost jesienią albo wiosną, nawóz NPK przed siewem." },
@@ -65,6 +77,11 @@ const ROSLINY = [
     bezChloru: true,
     opis: "Roślina o dużym zapotrzebowaniu na potas. Nadmiar azotu pogarsza smak i trwałość bulw.",
     gleba: { ph: "5,5–6,5", typ: "Lekka do średniej, przepuszczalna" },
+    uprawa: {
+      podlewanie: 2, podlewanieOpis: "Umiarkowanie. Najważniejsze od kwitnienia do zawiązywania bulw – w suszę ok. 20 l/m² tygodniowo.",
+      mroz: "Natka przemarza już przy –1 do –2°C – sadź od końca kwietnia.", odpornosc: 1, odpornoscOpis: "Podatny na zarazę ziemniaka i stonkę.",
+      trudnosc: 1, trudnoscOpis: "Sadzenie, obsypywanie i zbiór – poradzi sobie każdy."
+    },
     potrzeby: { N: 2, P: 2, K: 3 },
     nawozenie: [
       { termin: "Jesień / wczesna wiosna", zalecenie: "Obornik (nie świeży bezpośrednio przed sadzeniem), nawozy fosforowo-potasowe." },
@@ -88,6 +105,11 @@ const ROSLINY = [
     bezChloru: true,
     opis: "Wymaga gleby lekko kwaśnej i umiarkowanego nawożenia – nadmiar azotu daje bujne liście i miękkie owoce.",
     gleba: { ph: "5,5–6,5", typ: "Próchniczna, przepuszczalna" },
+    uprawa: {
+      podlewanie: 2, podlewanieOpis: "Regularnie, zwłaszcza po posadzeniu i w czasie owocowania: 10–15 l/m² tygodniowo, bez moczenia owoców.",
+      mroz: "Rośliny dobrze zimują, ale kwiaty marzną w wiosenne przymrozki – przykryj je agrowłókniną.", odpornosc: 2, odpornoscOpis: "W mokre lata szara pleśń – ściółkuj słomą.",
+      trudnosc: 1, trudnoscOpis: "Łatwa – trzeba tylko odnawiać plantację co 3–4 lata."
+    },
     potrzeby: { N: 2, P: 2, K: 3 },
     nawozenie: [
       { termin: "Przed posadzeniem", zalecenie: "Kompost lub obornik, nawóz wieloskładnikowy bez chloru." },
@@ -112,6 +134,11 @@ const ROSLINY = [
     kwasolubna: true,
     opis: "Roślina kwasolubna – w glebie o zbyt wysokim pH żółknie i słabo rośnie mimo nawożenia.",
     gleba: { ph: "3,8–4,8", typ: "Kwaśna, próchniczna, z dodatkiem torfu" },
+    uprawa: {
+      podlewanie: 3, podlewanieOpis: "Dużo i często, bo korzenie są płytkie: 10–20 l na krzew 2–3 razy w tygodniu latem, najlepiej deszczówką (bez wapnia).",
+      mroz: "Odporna – zimuje do ok. –25°C.", odpornosc: 3, odpornoscOpis: "Przy kwaśnej glebie choruje rzadko.",
+      trudnosc: 3, trudnoscOpis: "Udaje się tylko w kwaśnym podłożu (pH 3,8–4,8) i przy stałej wilgoci – na zwykłej glebie zmarnieje."
+    },
     potrzeby: { N: 2, P: 1, K: 2 },
     nawozenie: [
       { termin: "Przed sadzeniem", zalecenie: "Zakwaszenie podłoża kwaśnym torfem, korą sosnową lub siarką." },
@@ -134,6 +161,11 @@ const ROSLINY = [
     dawka: { N: 6, P: 3, K: 10 },
     opis: "Drzewo owocowe wymagające regularnego dokarmiania wapniem, który poprawia trwałość owoców.",
     gleba: { ph: "6,0–7,0", typ: "Żyzna, umiarkowanie wilgotna" },
+    uprawa: {
+      podlewanie: 1, podlewanieOpis: "Starsze drzewa zwykle nie wymagają. Młode drzewka i w suszę: 20–40 l na drzewo co 7–10 dni.",
+      mroz: "Bardzo odporna – zimuje do –30°C; kwiaty wrażliwe na wiosenne przymrozki.", odpornosc: 2, odpornoscOpis: "Parch i mączniak – wybieraj odmiany odporne.",
+      trudnosc: 2, trudnoscOpis: "Wymaga corocznego cięcia i ochrony przed parchem."
+    },
     potrzeby: { N: 2, P: 1, K: 2 },
     nawozenie: [
       { termin: "Wczesna wiosna", zalecenie: "Nawóz wieloskładnikowy rozsypany w obrębie korony (nie przy samym pniu)." },
@@ -156,6 +188,11 @@ const ROSLINY = [
     dawka: { N: 8, P: 6, K: 10 },
     opis: "Krzew ozdobny lubiący żyzną glebę i regularne nawożenie w pierwszej połowie sezonu.",
     gleba: { ph: "6,0–6,5", typ: "Żyzna, gliniasto-próchniczna" },
+    uprawa: {
+      podlewanie: 2, podlewanieOpis: "Rzadko, ale obficie: 10–15 l na krzew raz w tygodniu, pod korzeń, bez zraszania liści.",
+      mroz: "Większość dobrze zimuje po usypaniu kopczyka; róże wielkokwiatowe są wrażliwsze.", odpornosc: 1, odpornoscOpis: "Podatna na czarną plamistość i mączniaka – szukaj odmian z oznaczeniem ADR.",
+      trudnosc: 2, trudnoscOpis: "Cięcie wiosną, okrywanie na zimę i ochrona przed chorobami."
+    },
     potrzeby: { N: 2, P: 2, K: 3 },
     nawozenie: [
       { termin: "Wiosna (po cięciu)", zalecenie: "Nawóz wieloskładnikowy do róż lub kompost." },
@@ -179,6 +216,11 @@ const ROSLINY = [
     dawka: { N: 20, P: 5, K: 10 },
     opis: "Trawnik zużywa dużo azotu, bo jest regularnie koszony. Nawozy o spowolnionym działaniu dają równy kolor.",
     gleba: { ph: "5,5–7,0", typ: "Przepuszczalna, próchniczna" },
+    uprawa: {
+      podlewanie: 2, podlewanieOpis: "Rzadko, a obficie: 15–25 l/m² raz–dwa razy w tygodniu, rano. Częste płytkie podlewanie osłabia korzenie.",
+      mroz: "Odporny na mróz.", odpornosc: 2, odpornoscOpis: "Choroby grzybowe przy przenawożeniu azotem i zbitej glebie.",
+      trudnosc: 1, trudnoscOpis: "Regularne koszenie, wiosną wertykulacja – nic trudnego."
+    },
     potrzeby: { N: 3, P: 1, K: 2 },
     nawozenie: [
       { termin: "Wiosna (kwiecień)", zalecenie: "Nawóz do trawnika z przewagą azotu, najlepiej o spowolnionym działaniu." },
@@ -201,6 +243,11 @@ const ROSLINY = [
     dawka: { N: 8, P: 6, K: 18 },
     opis: "Nie lubi świeżego obornika – powoduje on rozwidlanie i gorszy smak korzeni.",
     gleba: { ph: "6,0–7,0", typ: "Lekka, głęboko spulchniona, bez kamieni" },
+    uprawa: {
+      podlewanie: 2, podlewanieOpis: "Równomiernie, ok. 10 l/m² co tydzień. Nierówne podlewanie powoduje pękanie korzeni.",
+      mroz: "Znosi lekkie przymrozki – wysiew już od początku kwietnia.", odpornosc: 2, odpornoscOpis: "Głównym wrogiem jest połyśnica marchwianka.",
+      trudnosc: 1, trudnoscOpis: "Wystarczy przerywanie i odchwaszczanie."
+    },
     potrzeby: { N: 1, P: 2, K: 3 },
     nawozenie: [
       { termin: "Rok wcześniej", zalecenie: "Obornik pod roślinę uprawianą przed marchwią (np. kapustę)." },
@@ -224,6 +271,11 @@ const ROSLINY = [
     bezChloru: true,
     opis: "Ciepłolubne warzywo o dużych potrzebach pokarmowych, wrażliwe na niedobór wapnia i magnezu.",
     gleba: { ph: "6,5–7,0", typ: "Ciepła, żyzna, próchniczna" },
+    uprawa: {
+      podlewanie: 2, podlewanieOpis: "Regularnie i umiarkowanie, ciepłą wodą: ok. 10 l/m² 2 razy w tygodniu, bez przelewania.",
+      mroz: "Bardzo ciepłolubna – źle znosi temperatury poniżej 10°C; sadź po 20 maja albo pod osłonami.", odpornosc: 2, odpornoscOpis: "Średnio odporna; kłopot sprawiają mszyce i przędziorek.",
+      trudnosc: 3, trudnoscOpis: "W gruncie trudna – potrzebuje dużo ciepła i słońca. Pod folią idzie dużo łatwiej."
+    },
     potrzeby: { N: 2, P: 2, K: 3 },
     nawozenie: [
       { termin: "Przed sadzeniem", zalecenie: "Kompost i nawóz wieloskładnikowy." },
@@ -246,6 +298,11 @@ const ROSLINY = [
     dawka: { N: 6, P: 3, K: 6 },
     opis: "Iglaki potrzebują magnezu i siarki – ich brak to częsta przyczyna brązowienia igieł.",
     gleba: { ph: "5,5–7,0", typ: "Wilgotna, próchniczna" },
+    uprawa: {
+      podlewanie: 2, podlewanieOpis: "Młode rośliny obficie co kilka dni. Starsze w suszę – także zimą w dni bez mrozu, bo susza zimowa brązowi igły.",
+      mroz: "Bardzo odporna – zimuje do –30°C.", odpornosc: 2, odpornoscOpis: "Brązowienie igieł to zwykle susza albo niedobór magnezu.",
+      trudnosc: 1, trudnoscOpis: "Podlewanie w suszę i przycinanie żywopłotu."
+    },
     potrzeby: { N: 2, P: 1, K: 2 },
     nawozenie: [
       { termin: "Wiosna (kwiecień–maj)", zalecenie: "Nawóz do iglaków z magnezem." },
@@ -268,6 +325,11 @@ const ROSLINY = [
     dawka: { N: 16, P: 7, K: 9 },
     opis: "Główne zboże w Polsce. Kluczowe jest dzielenie dawki azotu na kilka terminów.",
     gleba: { ph: "6,0–7,0", typ: "Średnie i ciężkie, żyzne" },
+    uprawa: {
+      podlewanie: 1, podlewanieOpis: "Uprawa bez nawadniania – wystarczą opady.",
+      mroz: "Ozima dobrze zimuje pod śniegiem; bez okrywy śnieżnej cierpi poniżej –15 do –20°C.", odpornosc: 2, odpornoscOpis: "Choroby grzybowe (septorioza, rdze) w wilgotne lata.",
+      trudnosc: 2, trudnoscOpis: "Uprawa polowa – wymaga sprzętu i zabiegów ochrony."
+    },
     potrzeby: { N: 3, P: 2, K: 2 },
     nawozenie: [
       { termin: "Przedsiewnie (jesień)", zalecenie: "Fosfor i potas zgodnie z zasobnością gleby (na podstawie analizy)." },
@@ -290,6 +352,11 @@ const ROSLINY = [
     dawka: { N: 20, P: 8, K: 20 },
     opis: "Najbardziej wymagające z warzyw kapustnych. Przy niedoborze boru i molibdenu tworzy małe, brązowiejące róże.",
     gleba: { ph: "6,5–7,5", typ: "Żyzna, próchniczna, stale wilgotna" },
+    uprawa: {
+      podlewanie: 3, podlewanieOpis: "Dużo i równomiernie: 15–20 l/m² tygodniowo. W suszę róże są drobne i luźne.",
+      mroz: "Znosi lekkie przymrozki, ale stres chłodem psuje róże.", odpornosc: 2, odpornoscOpis: "Kiła kapusty i szkodniki kapustne.",
+      trudnosc: 3, trudnoscOpis: "Reaguje na każdy stres (susza, upał, chłód); róże trzeba osłaniać liśćmi przed słońcem."
+    },
     potrzeby: { N: 3, P: 2, K: 3 },
     nawozenie: [
       { termin: "Jesień przed uprawą", zalecenie: "Obornik (ok. 4–6 kg/m²); na glebach kwaśnych wapnowanie." },
@@ -313,6 +380,11 @@ const ROSLINY = [
     dawka: { N: 18, P: 8, K: 18 },
     opis: "Mniej wymagający niż kalafior, ale również potrzebuje boru i regularnego podlewania.",
     gleba: { ph: "6,5–7,5", typ: "Żyzna, próchniczna, wilgotna" },
+    uprawa: {
+      podlewanie: 2, podlewanieOpis: "Regularnie, 10–15 l/m² tygodniowo, zwłaszcza gdy tworzą się róże.",
+      mroz: "Znosi przymrozki do ok. –5°C.", odpornosc: 2, odpornoscOpis: "Kiła kapusty i bielinek.",
+      trudnosc: 2, trudnoscOpis: "Łatwiejszy od kalafiora, ale wymaga ochrony przed szkodnikami."
+    },
     potrzeby: { N: 3, P: 2, K: 3 },
     nawozenie: [
       { termin: "Przed sadzeniem", zalecenie: "Kompost lub obornik, nawóz wieloskładnikowy z borem." },
@@ -335,6 +407,11 @@ const ROSLINY = [
     dawka: { N: 22, P: 10, K: 25 },
     opis: "Odmiany późne mają bardzo duże potrzeby pokarmowe. Dobrze reagują na obornik.",
     gleba: { ph: "6,5–7,5", typ: "Żyzna, zwięzła, zasobna w próchnicę" },
+    uprawa: {
+      podlewanie: 3, podlewanieOpis: "Dużo: 15–20 l/m² tygodniowo. Nierówne podlewanie powoduje pękanie główek.",
+      mroz: "Odporna – późne odmiany znoszą –5 do –8°C.", odpornosc: 2, odpornoscOpis: "Kiła kapusty, bielinek i mszyca kapuściana.",
+      trudnosc: 2, trudnoscOpis: "Potrzebuje żyznej gleby i ochrony przed szkodnikami."
+    },
     potrzeby: { N: 3, P: 2, K: 3 },
     nawozenie: [
       { termin: "Jesień przed uprawą", zalecenie: "Obornik (ok. 4–6 kg/m²) – kapustę uprawia się w pierwszym roku po oborniku." },
@@ -358,6 +435,11 @@ const ROSLINY = [
     dawka: { N: 9, P: 6, K: 8 },
     opis: "Najmniej wymagające zboże – dobrze znosi lekkie i kwaśne gleby. Nadmiar azotu powoduje wyleganie.",
     gleba: { ph: "5,0–6,5", typ: "Lekka, piaszczysta do średniej" },
+    uprawa: {
+      podlewanie: 1, podlewanieOpis: "Bez nawadniania – zboże najlepiej znoszące suszę.",
+      mroz: "Najodporniejsze na mróz ze zbóż – zimuje nawet przy –25°C.", odpornosc: 3, odpornoscOpis: "Mało chorób, mało wymagań.",
+      trudnosc: 1, trudnoscOpis: "Udaje się nawet na słabych, piaszczystych glebach."
+    },
     potrzeby: { N: 2, P: 1, K: 2 },
     nawozenie: [
       { termin: "Przedsiewnie (jesień)", zalecenie: "Fosfor i potas według zasobności gleby; azot jesienią zwykle zbędny." },
@@ -380,6 +462,11 @@ const ROSLINY = [
     dawka: { N: 8, P: 6, K: 9 },
     opis: "Bardzo wrażliwy na kwaśny odczyn gleby. Jęczmień browarny nawozi się azotem oszczędniej niż paszowy.",
     gleba: { ph: "6,0–7,0", typ: "Średnia, żyzna, nie kwaśna" },
+    uprawa: {
+      podlewanie: 1, podlewanieOpis: "Bez nawadniania; najbardziej wrażliwy na suszę w czasie kłoszenia.",
+      mroz: "Odmiana jara – siew wczesną wiosną, znosi lekkie przymrozki.", odpornosc: 2, odpornoscOpis: "Plamistość siatkowa i mączniak.",
+      trudnosc: 2, trudnoscOpis: "Uprawa polowa – wymaga sprzętu i zabiegów ochrony."
+    },
     potrzeby: { N: 2, P: 2, K: 2 },
     nawozenie: [
       { termin: "Jesień / wczesna wiosna", zalecenie: "Wapnowanie przy pH poniżej 6; fosfor i potas według zasobności." },
@@ -402,6 +489,11 @@ const ROSLINY = [
     dawka: { N: 15, P: 8, K: 12 },
     opis: "Roślina ciepłolubna o dużych potrzebach pokarmowych. Wrażliwa na niedobór cynku i fosforu na starcie.",
     gleba: { ph: "6,0–7,0", typ: "Żyzna, ciepła, przewiewna" },
+    uprawa: {
+      podlewanie: 2, podlewanieOpis: "Najwięcej wody potrzebuje w czasie wiechowania i zawiązywania kolb – w suszę ok. 20 l/m² tygodniowo.",
+      mroz: "Ciepłolubna – siej, gdy gleba ma 8–10°C (koniec kwietnia–maj); przymrozki uszkadzają siewki.", odpornosc: 2, odpornoscOpis: "Omacnica prosowianka i głownia.",
+      trudnosc: 1, trudnoscOpis: "W ogrodzie łatwa – siew, odchwaszczanie i zbiór."
+    },
     potrzeby: { N: 3, P: 2, K: 3 },
     nawozenie: [
       { termin: "Jesień / przedsiewnie", zalecenie: "Obornik lub gnojowica; fosfor i potas według zasobności." },
@@ -425,6 +517,11 @@ const ROSLINY = [
     dawka: { N: 3, P: 6, K: 9 },
     opis: "Roślina bobowata – sama wiąże azot z powietrza dzięki bakteriom brodawkowym, więc azotu potrzebuje bardzo mało.",
     gleba: { ph: "6,0–7,0", typ: "Ciepła, średnia, przepuszczalna" },
+    uprawa: {
+      podlewanie: 2, podlewanieOpis: "Umiarkowanie; najważniejsze w czasie kwitnienia i nalewania strąków.",
+      mroz: "Ciepłolubna – siej, gdy gleba ma ok. 10°C; przymrozki niszczą siewki.", odpornosc: 2, odpornoscOpis: "Zgnilizna twardzikowa w wilgotne lata.",
+      trudnosc: 2, trudnoscOpis: "Wymaga ciepłego stanowiska i szczepienia nasion bakteriami brodawkowymi."
+    },
     potrzeby: { N: 1, P: 2, K: 3 },
     nawozenie: [
       { termin: "Przed siewem", zalecenie: "Fosfor i potas według zasobności; ewentualnie mała, startowa dawka azotu." },

@@ -1,0 +1,242 @@
+/* ===== Zakładki w nagłówku ===== */
+.naglowek-prawa { display: flex; align-items: center; gap: 14px; }
+.zakladka {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px; min-height: 40px; border-radius: 999px;
+  color: var(--tekst); text-decoration: none; font-weight: 600; font-size: 0.98rem;
+  border: 1px solid var(--ramka); background: var(--karta);
+  transition: border-color .15s, background .15s;
+}
+.zakladka svg { width: 20px; height: 20px; color: var(--akcent); flex: none; }
+.zakladka:hover { border-color: var(--akcent); }
+.zakladka:focus-visible { outline: 2px solid var(--akcent); outline-offset: 2px; }
+.zakladka.aktywna { background: var(--akcent); border-color: var(--akcent); color: var(--na-akcencie); }
+.zakladka.aktywna svg { color: var(--na-akcencie); }
+@media (max-width: 480px) {
+  .zakladka { padding: 8px 10px; }
+  .zakladka span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .naglowek-prawa { gap: 10px; }
+}
+
+/* ===== Kalendarz prac – kolory typów (jasny i ciemny motyw) ===== */
+:root {
+  --t-siew: #a8691d;        --t-siew-tlo: #f8ead3;
+  --t-nawozenie: #2f7d32;   --t-nawozenie-tlo: #e0efd8;
+  --t-ochrona: #b8342a;     --t-ochrona-tlo: #f9e0dc;
+  --t-pielegnacja: #2e6fae; --t-pielegnacja-tlo: #dde9f6;
+  --t-zbior: #7a4bb3;       --t-zbior-tlo: #ece2f7;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-motyw="jasny"]) {
+    --t-siew: #e8b46a;        --t-siew-tlo: #3d3020;
+    --t-nawozenie: #8fd389;   --t-nawozenie-tlo: #22382a;
+    --t-ochrona: #f19a8e;     --t-ochrona-tlo: #42242a;
+    --t-pielegnacja: #8dbdf0; --t-pielegnacja-tlo: #1f3044;
+    --t-zbior: #c6a3ef;       --t-zbior-tlo: #33284a;
+  }
+}
+:root[data-motyw="ciemny"] {
+  --t-siew: #e8b46a;        --t-siew-tlo: #3d3020;
+  --t-nawozenie: #8fd389;   --t-nawozenie-tlo: #22382a;
+  --t-ochrona: #f19a8e;     --t-ochrona-tlo: #42242a;
+  --t-pielegnacja: #8dbdf0; --t-pielegnacja-tlo: #1f3044;
+  --t-zbior: #c6a3ef;       --t-zbior-tlo: #33284a;
+}
+.typ-siew { --t: var(--t-siew); --t-tlo: var(--t-siew-tlo); }
+.typ-nawozenie { --t: var(--t-nawozenie); --t-tlo: var(--t-nawozenie-tlo); }
+.typ-ochrona { --t: var(--t-ochrona); --t-tlo: var(--t-ochrona-tlo); }
+.typ-pielegnacja { --t: var(--t-pielegnacja); --t-tlo: var(--t-pielegnacja-tlo); }
+.typ-zbior { --t: var(--t-zbior); --t-tlo: var(--t-zbior-tlo); }
+
+/* Pasek miesięcy */
+.kal-miesiace {
+  display: grid; grid-template-columns: repeat(12, minmax(52px, 1fr)); gap: 6px;
+  margin: 22px 0 14px; overflow-x: auto; padding: 12px 2px 6px; scroll-margin-top: 80px;
+}
+.kal-miesiac {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  font: inherit; padding: 8px 4px 7px; border-radius: 12px; cursor: pointer;
+  background: var(--tlo); color: var(--tekst); border: 1px solid var(--ramka);
+}
+.kal-miesiac:hover { border-color: var(--akcent); }
+.kal-m-nazwa { font-weight: 700; text-transform: capitalize; font-size: 0.95rem; }
+.kal-m-liczba { font-size: 0.75rem; color: var(--tekst-slaby); }
+.kal-miesiac.aktywny { background: var(--akcent); border-color: var(--akcent); color: var(--na-akcencie); }
+.kal-miesiac.aktywny .kal-m-liczba { color: var(--na-akcencie); opacity: .85; }
+.kal-teraz {
+  position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
+  font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+  background: var(--braz); color: #fff; padding: 1px 6px; border-radius: 999px; white-space: nowrap;
+}
+
+/* Filtry */
+.kal-filtry { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.kal-filtr { display: flex; flex-wrap: wrap; gap: 6px; }
+.kal-chip {
+  font: inherit; font-size: 0.85rem; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  background: var(--karta); color: var(--tekst); border: 1px solid var(--ramka);
+}
+.kal-chip:hover { border-color: var(--t, var(--akcent)); }
+.kal-chip.wybrany { background: var(--t-tlo, var(--akcent-jasny)); border-color: var(--t, var(--akcent)); color: var(--t, var(--tekst)); font-weight: 600; }
+.kal-kategoria { font-size: 0.88rem; color: var(--tekst-slaby); display: flex; gap: 8px; align-items: center; }
+.kal-kategoria select { font: inherit; color: var(--tekst); background: var(--karta); border: 1px solid var(--ramka); border-radius: 10px; padding: 6px 10px; }
+
+/* Lista prac w miesiącu */
+.kal-tytul { text-transform: capitalize; display: flex; align-items: baseline; gap: 10px; }
+.kal-tytul span { text-transform: none; font-size: 0.9rem; font-weight: 400; color: var(--tekst-slaby); }
+.kal-pusto { background: var(--tlo); border-radius: 12px; padding: 16px; color: var(--tekst-slaby); }
+.kal-siatka { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+.kal-roslina { border: 1px solid var(--ramka); border-radius: 14px; padding: 12px 14px; background: var(--karta); }
+.kal-ogolne { background: var(--akcent-jasny); border-color: transparent; margin-bottom: 12px; }
+.kal-roslina-naglowek { display: flex; align-items: center; gap: 10px; color: var(--tekst); text-decoration: none; margin-bottom: 8px; }
+a.kal-roslina-naglowek:hover b { color: var(--akcent); }
+.kal-roslina-naglowek .kat { display: block; font-size: 0.78rem; color: var(--tekst-slaby); }
+.kal-grafika { width: 48px; height: 48px; flex: none; border-radius: 10px; object-fit: cover; }
+.kal-ogolne-ikona { font-size: 1.8rem; width: 48px; text-align: center; }
+.kal-strzalka { margin-left: auto; color: var(--tekst-slaby); }
+.kal-prace { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.kal-praca {
+  display: grid; gap: 3px; padding: 8px 10px; font-size: 0.92rem; line-height: 1.45;
+  border-left: 3px solid var(--t); background: var(--tlo); border-radius: 0 10px 10px 0;
+}
+.kal-typ { justify-self: start; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--t); }
+
+/* Przegląd roku */
+.kal-rok-przewijany { overflow-x: auto; border: 1px solid var(--ramka); border-radius: 14px; }
+.kal-rok { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 640px; }
+.kal-rok th, .kal-rok td { padding: 5px 4px; border-bottom: 1px solid var(--ramka); text-align: center; }
+.kal-rok tbody tr:last-child > * { border-bottom: none; }
+.kal-rok thead th { background: var(--karta); }
+.kal-rok thead button { font: inherit; font-weight: 700; background: none; border: none; color: var(--tekst); cursor: pointer; padding: 4px 6px; border-radius: 8px; }
+.kal-rok thead button:hover { background: var(--akcent-jasny); }
+.kal-rok th[scope="row"] { text-align: left; white-space: nowrap; padding-left: 10px; }
+.kal-rok th[scope="row"] a { display: inline-flex; align-items: center; gap: 6px; color: var(--tekst); text-decoration: none; font-weight: 600; }
+.kal-rok th[scope="row"] a:hover { color: var(--akcent); }
+.kal-mini { width: 26px; height: 26px; border-radius: 6px; object-fit: cover; flex: none; }
+.kal-rok td { cursor: pointer; min-width: 38px; }
+.kal-rok td:hover { background: var(--akcent-jasny); }
+.kal-rok td.teraz { background: color-mix(in srgb, var(--braz) 8%, transparent); }
+.kal-rok thead .teraz button { color: var(--braz); }
+.kal-rok .wybrany { background: var(--akcent-jasny); }
+.kal-rok thead .wybrany button { background: var(--akcent); color: var(--na-akcencie); }
+.kal-kropka { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--t); margin: 1px; vertical-align: middle; }
+.kal-legenda { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font-size: 0.82rem; color: var(--tekst-slaby); }
+.kal-legenda > span { display: inline-flex; align-items: center; gap: 4px; }
+.kal-uwaga { margin-top: 20px; }
+
+/* Przyciski-nagłówki roślin (w widoku miesiąca i w tabeli roku) */
+button.kal-roslina-naglowek {
+  width: 100%; font: inherit; text-align: left; cursor: pointer;
+  background: none; border: none; padding: 0; border-radius: 10px;
+}
+button.kal-roslina-naglowek:hover b { color: var(--akcent); }
+button.kal-roslina-naglowek:focus-visible { outline: 2px solid var(--akcent); outline-offset: 3px; }
+.kal-strzalka { font-size: 0.8rem; white-space: nowrap; }
+button.kal-roslina-naglowek:hover .kal-strzalka { color: var(--akcent); }
+.kal-rok th[scope="row"] button {
+  display: inline-flex; align-items: center; gap: 6px; font: inherit; font-weight: 600;
+  color: var(--tekst); background: none; border: none; cursor: pointer; padding: 2px 4px; border-radius: 6px;
+}
+.kal-rok th[scope="row"] button:hover { color: var(--akcent); }
+
+/* ===== Ekran startowy: wybór rośliny ===== */
+.kal-start { margin-top: 8px; }
+.kal-start-tytul { font-size: 1.4rem; margin: 22px 0 4px; }
+.kal-start-kat { margin: 22px 0 10px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--braz); }
+.kal-kafle { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 12px; }
+.kal-kafel {
+  display: flex; flex-direction: column; overflow: hidden; text-decoration: none; color: var(--tekst);
+  background: var(--karta); border: 1px solid var(--ramka); border-radius: 16px;
+  transition: transform .15s, border-color .15s, box-shadow .15s;
+}
+.kal-kafel:hover { transform: translateY(-3px); border-color: var(--akcent); box-shadow: var(--cien); }
+.kal-kafel:focus-visible { outline: 3px solid var(--akcent); outline-offset: 2px; }
+.kal-kafel-foto { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--tlo); }
+.kal-kafel-tekst { display: grid; gap: 2px; padding: 10px 12px 12px; }
+.kal-kafel-tekst b { font-size: 1.02rem; }
+.kal-kafel-info { font-size: 0.8rem; color: var(--tekst-slaby); }
+.kal-kafel-teraz { justify-self: start; margin-top: 4px; font-size: 0.75rem; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: var(--braz); color: #fff; }
+.kal-kafel-teraz.pusto { background: var(--tlo); color: var(--tekst-slaby); font-weight: 600; }
+.kal-wszystkie-karta {
+  display: flex; align-items: center; gap: 14px; margin-top: 26px; padding: 16px 18px;
+  border-radius: 16px; background: var(--akcent-jasny); color: var(--tekst); text-decoration: none;
+  border: 1px solid transparent; transition: border-color .15s;
+}
+.kal-wszystkie-karta:hover { border-color: var(--akcent); }
+.kal-wszystkie-karta > span:nth-child(2) { display: grid; gap: 2px; }
+.kal-wszystkie-ikona { font-size: 1.8rem; }
+
+/* Pasek nad widokiem rośliny / miesiąca */
+.kal-pasek-wyboru { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; margin: 18px 0 14px; padding: 10px 14px; border-radius: 14px; background: var(--tlo); }
+.kal-zmien { font-weight: 700; text-decoration: none; padding: 8px 14px; border-radius: 999px; border: 2px solid var(--akcent); color: var(--akcent); }
+.kal-zmien:hover { background: var(--akcent); color: var(--na-akcencie); }
+.kal-szybki-wybor { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--tekst-slaby); }
+.kal-szybki-wybor select { font: inherit; font-size: 0.95rem; color: var(--tekst); background: var(--karta); border: 1px solid var(--ramka); border-radius: 10px; padding: 7px 10px; }
+.kal-filtry { margin-bottom: 4px; }
+
+/* ===== Widok rośliny: profil ===== */
+.kal-profil { display: grid; grid-template-columns: 220px 1fr; gap: 20px; align-items: center; margin-top: 18px; padding: 16px; border-radius: 18px; background: var(--akcent-jasny); }
+.kal-duza { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; display: block; }
+.kal-profil h3 { margin: 2px 0 0; font-size: 1.6rem; }
+.kal-profil p { margin: 10px 0 14px; }
+.kal-profil-kat { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--braz); }
+.kal-profil .lac { color: var(--tekst-slaby); font-style: italic; }
+.kal-profil-akcje { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* Rok w skrócie (wykres Gantta) */
+.kal-gantt { border: 1px solid var(--ramka); border-radius: 14px; padding: 8px 10px; overflow-x: auto; display: grid; gap: 4px; }
+.kal-gantt-wiersz { display: grid; grid-template-columns: 150px repeat(12, minmax(34px, 1fr)); align-items: center; min-width: 600px; }
+.kal-gantt-naglowek button {
+  font: inherit; font-size: 0.8rem; font-weight: 700; background: none; border: none; color: var(--tekst);
+  cursor: pointer; padding: 4px 0; border-radius: 6px;
+}
+.kal-gantt-naglowek button:hover { background: var(--akcent-jasny); }
+.kal-gantt-naglowek button.teraz { color: var(--na-akcencie); background: var(--braz); }
+.kal-gantt-etykieta { font-size: 0.82rem; font-weight: 600; color: var(--t); white-space: nowrap; }
+.kal-gantt-kom { height: 22px; display: flex; align-items: center; }
+.kal-gantt-kom.teraz { background: color-mix(in srgb, var(--braz) 10%, transparent); }
+.kal-gantt-pasek { display: block; width: 100%; height: 12px; background: var(--t); opacity: .85; }
+.kal-gantt-pasek.poczatek { border-top-left-radius: 999px; border-bottom-left-radius: 999px; margin-left: 3px; }
+.kal-gantt-pasek.koniec { border-top-right-radius: 999px; border-bottom-right-radius: 999px; margin-right: 3px; }
+
+/* Miesiąc po miesiącu (oś czasu) */
+.kal-os { list-style: none; margin: 0; padding: 0 0 0 18px; border-left: 3px solid var(--ramka); display: grid; gap: 16px; }
+.kal-os-miesiac { position: relative; scroll-margin-top: 90px; }
+.kal-os-miesiac::before {
+  content: ""; position: absolute; left: -27px; top: 6px; width: 13px; height: 13px; border-radius: 50%;
+  background: var(--karta); border: 3px solid var(--ramka);
+}
+.kal-os-miesiac.teraz::before { background: var(--braz); border-color: var(--braz); }
+.kal-os-naglowek { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.kal-os-nazwa { font-weight: 700; font-size: 1.05rem; text-transform: capitalize; }
+.kal-teraz-znacznik { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; background: var(--braz); color: #fff; padding: 2px 8px; border-radius: 999px; }
+.kal-teraz-znacznik.nastepny { background: none; color: var(--braz); border: 1px solid var(--braz); }
+
+.kal-tytul.bez-wielkich { text-transform: none; }
+.kal-info { background: var(--tlo); border-radius: 12px; padding: 10px 14px; margin: 0 0 14px; font-size: 0.92rem; }
+
+/* Najważniejsze o roślinie */
+.kal-fakty { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.kal-fakt { background: var(--tlo); border-radius: 12px; padding: 10px 12px; display: grid; gap: 3px; align-content: start; }
+.kal-fakt-etykieta { font-size: 0.78rem; color: var(--tekst-slaby); }
+.kal-fakt-wartosc { font-weight: 600; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.kal-fakt-opis { font-size: 0.85rem; color: var(--tekst-slaby); line-height: 1.4; }
+.kal-fakt-link { font-size: 0.85rem; justify-self: start; }
+.kal-skala { color: var(--akcent); letter-spacing: 2px; }
+.kal-skala span { color: var(--ramka); }
+.kal-npk { font-weight: 500; }
+.kal-podtytul { margin: 20px 0 10px; }
+.kal-problemy { display: grid; gap: 8px; }
+.kal-problem { border: 1px solid var(--ramka); border-radius: 12px; padding: 10px 14px; background: var(--karta); }
+.kal-problem summary { cursor: pointer; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.kal-problem p { margin: 8px 0 0; font-size: 0.92rem; }
+
+@media (max-width: 640px) {
+  .kal-miesiace { grid-template-columns: repeat(12, 58px); }
+  .kal-siatka { grid-template-columns: 1fr; }
+  .kal-kafle { grid-template-columns: repeat(2, 1fr); }
+  .kal-profil { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .naglowek { flex-wrap: wrap; }
+}

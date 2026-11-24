@@ -307,33 +307,47 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 40px; }
 }
 .kategoria.wybrana { background: var(--akcent); color: var(--na-akcencie); border-color: var(--akcent); }
 
+/* --- Kafelki roślin: „pocztówki” – zdjęcie na całą kartę, podpis na ciemnym przejściu --- */
 .lista {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 12px;
-  margin-top: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
 }
 .kafel {
-  background: var(--karta);
-  border: 1px solid var(--ramka);
-  border-radius: 14px;
-  padding: 16px 12px 14px;
-  text-align: center;
-  text-decoration: none;
-  color: var(--tekst);
-  box-shadow: var(--cien);
-  transition: transform .15s;
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  overflow: hidden;
+  position: relative; display: block; overflow: hidden;
+  aspect-ratio: 4 / 5; border-radius: 18px;
+  background: #f1f0ec; box-shadow: var(--cien);
+  text-decoration: none; color: #fff;
+  transition: transform .2s, box-shadow .2s;
 }
-.kafel:hover { transform: translateY(-2px); border-color: var(--akcent); }
-.kafel-grafika { width: 104px; height: 104px; display: block; }
-.kafel-tekst { display: flex; flex-direction: column; font-weight: 600; line-height: 1.3; }
-.kafel .kat { font-size: 0.8rem; color: var(--tekst-slaby); font-weight: 400; }
-.podpowiedzi .miniatura { width: 32px; height: 32px; flex: none; }
+.kafel:hover { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(30, 40, 20, .22); }
+.kafel:focus-visible { outline: 3px solid var(--akcent); outline-offset: 3px; }
+.kafel-grafika { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+.kafel:hover .kafel-grafika { transform: scale(1.06); }
+.kafel-podpis {
+  position: absolute; inset: auto 0 0 0; padding: 44px 14px 14px;
+  background: linear-gradient(transparent, rgba(15, 25, 15, .8));
+}
+.kafel-podpis b { display: block; font-family: "Fraunces", Georgia, serif; font-size: 1.25rem; font-weight: 700; line-height: 1.15; }
+.kafel-podpis span { font-size: 0.8rem; font-style: italic; opacity: .85; }
+.kafel-kat {
+  position: absolute; top: 10px; left: 10px;
+  font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+  background: rgba(255, 255, 255, .92); color: #1f2a1f;
+}
+@media (max-width: 520px) {
+  .lista { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .kafel { border-radius: 14px; }
+  .kafel-podpis { padding: 36px 10px 10px; }
+  .kafel-podpis b { font-size: 1.02rem; }
+  .kafel-podpis span { display: none; }
+}
+.podpowiedzi .miniatura { width: 36px; height: 36px; flex: none; border-radius: 8px; object-fit: cover; }
 
 .naglowek-grafika { margin: 0; flex: none; }
-.karta-grafika { width: 112px; height: 112px; display: block; }
+.karta-grafika { display: block; width: 200px; height: 150px; object-fit: cover; border-radius: 14px; border: 1px solid var(--ramka); background: #f1f0ec; }
+@media (max-width: 640px) { .naglowek-grafika { width: 100%; } .karta-grafika { width: 100%; height: auto; aspect-ratio: 4 / 3; } }
 
 /* --- Karta wyniku --- */
 .wynik {
@@ -382,4 +396,126 @@ h3 { margin: 28px 0 12px; font-size: 1.2rem; }
   .wynik { padding: 16px; }
   .npk-wiersz { grid-template-columns: 90px 1fr 60px; }
   .wroc { margin-left: 0; }
+}
+
+/* ===== Karta rośliny: krok po kroku ===== */
+.wynik-naglowek { align-items: flex-start; flex-wrap: nowrap; }
+.wynik-tytul { min-width: 0; }
+.wynik-tytul h2 { font-family: "Fraunces", Georgia, serif; font-size: clamp(1.7rem, 4vw, 2.2rem); line-height: 1.1; }
+.wynik-opis { margin: 10px 0 0; }
+.szybkie { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.szybkie span { background: var(--akcent-jasny); border-radius: 999px; padding: 4px 12px; font-size: 0.85rem; }
+
+/* Pasek kroków */
+.kroki-nav {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 0;
+  margin: 24px -24px 0; padding: 16px 24px 0; border-top: 1px solid var(--ramka);
+  scroll-margin-top: 80px;
+}
+.krok-przycisk {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  background: none; border: none; cursor: pointer; padding: 4px 2px 12px; font: inherit;
+  color: var(--tekst-slaby); font-size: 0.85rem; font-weight: 600;
+}
+/* linia łącząca kółka */
+.krok-przycisk::before {
+  content: ""; position: absolute; top: 19px; left: -50%; width: 100%; height: 3px;
+  background: var(--ramka); z-index: 0;
+}
+.krok-przycisk:first-child::before { display: none; }
+.krok-nr {
+  position: relative; z-index: 1; display: grid; place-items: center;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--karta); border: 2px solid var(--ramka); color: var(--tekst-slaby);
+  transition: background .2s, border-color .2s, color .2s;
+}
+.krok-przycisk:hover .krok-nr { border-color: var(--akcent); }
+.krok-przycisk.zrobiony .krok-nr { background: var(--akcent-jasny); border-color: var(--akcent); color: var(--akcent); }
+.krok-przycisk.zrobiony::before, .krok-przycisk.aktywny::before { background: var(--akcent); }
+.krok-przycisk.aktywny { color: var(--tekst); }
+.krok-przycisk.aktywny .krok-nr { background: var(--akcent); border-color: var(--akcent); color: var(--na-akcencie); box-shadow: 0 0 0 4px var(--akcent-jasny); }
+.krok-przycisk.aktywny::after {
+  content: ""; position: absolute; bottom: 0; left: 20%; right: 20%; height: 3px; border-radius: 3px; background: var(--akcent);
+}
+.krok-nazwa { text-align: center; line-height: 1.2; }
+
+/* Treść kroku */
+.krok { margin: 0 -24px -24px; padding: 20px 24px 24px; background: var(--tlo); border-top: 1px solid var(--ramka); border-radius: 0 0 18px 18px; }
+.krok .info div, .krok .harmonogram li, .krok .kalk-wynik, .krok .badanie { background: var(--karta); }
+.krok-naglowek { margin-bottom: 18px; }
+.krok-licznik { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--akcent); }
+.krok-naglowek h3 { margin: 2px 0 4px; font-size: 1.45rem; }
+.krok-naglowek p { margin: 0; color: var(--tekst-slaby); }
+.krok-podtytul { margin: 22px 0 10px; font-size: 1rem; }
+.krok .info { margin: 0; }
+.krok .npk { background: var(--karta); border-radius: 12px; padding: 14px 16px; max-width: none; }
+.krok-stopka { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 24px; padding-top: 18px; border-top: 1px dashed var(--ramka); }
+.krok-wstecz { background: none; border: 1px solid var(--ramka); color: var(--tekst); padding: 9px 16px; border-radius: 999px; cursor: pointer; font: inherit; font-weight: 600; }
+.krok-wstecz:hover { border-color: var(--akcent); }
+.krok-dalej { margin-left: auto; }
+
+/* Oś czasu nawożenia */
+.os-czasu { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.os-czasu li { position: relative; display: grid; grid-template-columns: 36px 1fr; gap: 14px; padding-bottom: 18px; }
+.os-czasu li:not(:last-child)::before { content: ""; position: absolute; left: 17px; top: 36px; bottom: 0; width: 2px; background: var(--ramka); }
+.os-nr { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--akcent); color: var(--na-akcencie); font-weight: 700; }
+.os-czasu li > div { background: var(--karta); border: 1px solid var(--ramka); border-radius: 12px; padding: 10px 14px; }
+.os-czasu p { margin: 4px 0 0; }
+
+/* Ochrona – zwijane karty */
+.krok .problem { background: var(--karta); padding: 0; }
+.problem summary { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 16px; cursor: pointer; list-style: none; font-weight: 600; }
+.problem summary::-webkit-details-marker { display: none; }
+.problem summary::after { content: "+"; margin-left: auto; font-size: 1.3rem; line-height: 1; color: var(--akcent); }
+.problem[open] summary::after { content: "–"; }
+.problem[open] summary { border-bottom: 1px solid var(--ramka); }
+.problem dl { margin: 0; padding: 12px 16px 14px; display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; }
+.problem dt { font-weight: 600; color: var(--tekst-slaby); font-size: 0.9rem; }
+.problem dd { margin: 0; }
+
+@media (max-width: 640px) {
+  .wynik-naglowek { flex-wrap: wrap; }
+  .kroki-nav { margin: 20px -16px 0; padding: 14px 8px 0; }
+  .krok { margin: 0 -16px -16px; padding: 18px 16px 20px; }
+  .krok-nazwa { font-size: 0.72rem; }
+  .krok-przycisk:not(.aktywny) .krok-nazwa { opacity: .8; }
+  .problem dl { grid-template-columns: 1fr; gap: 2px; }
+  .problem dd { margin-bottom: 8px; }
+  .krok-stopka { flex-direction: column-reverse; align-items: stretch; }
+  .krok-stopka > * { text-align: center; }
+  .krok-dalej { margin-left: 0; }
+}
+
+/* Przycisk powrotu w nagłówku karty rośliny (prawy górny róg) */
+.wynik-powrot { margin-left: auto; align-self: flex-start; flex: none; font-size: 0.95rem; padding: 8px 16px; min-height: 40px; }
+@media (max-width: 640px) {
+  .wynik-powrot { order: -1; margin-left: 0; }
+}
+
+/* Krok „Wymagania”: podlewanie, odporność, trudność */
+.uprawa { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.uprawa-karta { background: var(--karta); border-radius: 12px; padding: 12px 14px; font-size: 0.9rem; }
+.uprawa-karta p { margin: 8px 0 0; color: var(--tekst-slaby); }
+.uprawa-gora { display: flex; align-items: center; gap: 10px; }
+.uprawa-gora > span:nth-child(2) { flex: 1; min-width: 0; }
+.uprawa-gora .etykieta { display: block; font-size: 0.78rem; color: var(--tekst-slaby); }
+.uprawa-gora b { font-size: 1.05rem; text-transform: capitalize; }
+.uprawa-ikona { font-size: 1.5rem; line-height: 1; }
+.uprawa-mroz { border-top: 1px dashed var(--ramka); padding-top: 8px; }
+.skala { display: inline-flex; gap: 4px; flex: none; }
+.skala i { width: 10px; height: 10px; border-radius: 50%; background: var(--ramka); }
+.skala.woda i.pelna { background: var(--N); }
+.skala.tarcza i.pelna { background: var(--akcent); }
+.skala.trud i.pelna { background: #d98a3a; }
+.trudnosc-1 { color: var(--akcent); }
+.trudnosc-2 { color: #c98a22; }
+.trudnosc-3 { color: var(--P); }
+@media (max-width: 760px) { .uprawa { grid-template-columns: 1fr; } }
+
+/* Przyciski powrotu w nagłówku kalendarza i poradników */
+.wynik-powroty { margin-left: auto; align-self: flex-start; display: flex; gap: 8px; flex-wrap: nowrap; flex: none; justify-content: flex-end; }
+.wynik-powroty .wynik-powrot { white-space: nowrap; }
+.wynik-powroty .wynik-powrot { margin-left: 0; }
+@media (max-width: 640px) {
+  .wynik-powroty { order: -1; margin-left: 0; width: 100%; flex-wrap: wrap; justify-content: flex-start; }
 }
